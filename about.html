@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Tonny Mutea</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="firebase.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <button id="dark-mode-toggle">Dark Mode</button>
+    </header>
+    <main>
+        <section id="about" data-aos="fade-in">
+            <h1>About Me</h1>
+            <p data-aos="fade-up">Hello, I’m Tonny Mutea, a technology enthusiast and aspiring cybersecurity expert currently pursuing my studies at USIU–Africa. I have a deep interest in web development and digital innovation, and I enjoy combining creativity with technical problem-solving.</p>
+            <h2 data-aos="fade-up">My Story</h2>
+            <p data-aos="fade-up">I started exploring technology through small coding projects and online tutorials, and that curiosity has grown into a genuine passion for designing and developing web applications. I believe that every great product starts with understanding people — how they think, interact, and connect online.</p>
+            <h2 data-aos="fade-up">Education</h2>
+            <p data-aos="fade-up">BSc. Applied Computer Technology – USIU–Africa</p>
+            <p data-aos="fade-up">Concentration in Web Design and Cybersecurity</p>
+            <p data-aos="fade-up">2024 – Present</p>
+            <h2 data-aos="fade-up">Skills & Competencies</h2>
+            <ul data-aos="fade-up">
+                <li>Frontend: HTML5, CSS3, JavaScript</li>
+                <li>Programming: Java, Python (beginner level)</li>
+                <li>Tools: VS Code, GitHub, Figma</li>
+                <li>Concepts: Responsive Design, Networking, Basic Cybersecurity</li>
+                <li>Soft Skills: Communication, Teamwork, Creative Thinking</li>
+            </ul>
+            <h2 data-aos="fade-up">Hobbies & Interests</h2>
+            <p data-aos="fade-up">When I’m not coding, I love exploring new tech tools, attending innovation events, and learning how technology can improve daily life. I’m also passionate about mentoring peers and sharing creative ideas.</p>
+            <h2 data-aos="fade-up">Career Vision</h2>
+            <p data-aos="fade-up">To become a full-stack web developer and cybersecurity specialist — someone who builds systems that are not only functional and beautiful but also secure and trustworthy.</p>
+            <a href="#" class="btn" data-aos="fade-up" id="download-cv-btn">Download My CV (PDF)</a>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS, JavaScript & Firebase</p>
+    </footer>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <script>
+      const lenis = new Lenis()
+
+      function raf(time) {
+        lenis.raf(time)
+        requestAnimationFrame(raf)
+      }
+
+      requestAnimationFrame(raf)
+    </script>
+</body>
+</html>

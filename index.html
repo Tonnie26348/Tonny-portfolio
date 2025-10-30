@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tonny Mutea - Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="firebase.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <button id="dark-mode-toggle">Dark Mode</button>
+    </header>
+    <main>
+        <section id="hero" data-aos="fade-in">
+            <h1>👋 Hi, I’m Tonny Mutea</h1>
+            <p class="typing-animation">
+                <span class="typing-text"></span>
+            </p>
+            <p>I’m a creative and detail-oriented web developer passionate about building elegant, user-friendly websites and learning how to make them secure. I enjoy transforming ideas into digital experiences that are both visually appealing and functional.</p>
+            <a href="projects.html" class="btn">View My Projects</a>
+            <a href="contact.html" class="btn">Contact Me</a>
+        </section>
+
+        <section id="profile-photo" data-aos="fade-up">
+            <h2>Profile Photo</h2>
+            <img id="profile-image" src="" alt="Profile Photo" loading="lazy">
+            <input type="file" id="photo-upload" accept=".jpg, .png, .jpeg">
+            <button id="upload-btn">Upload Photo</button>
+            <button id="delete-btn">Delete Current Photo</button>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS, JavaScript & Firebase</p>
+    </footer>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <script>
+      const lenis = new Lenis()
+
+      function raf(time) {
+        lenis.raf(time)
+        requestAnimationFrame(raf)
+      }
+
+      requestAnimationFrame(raf)
+    </script>
+</body>
+</html>
