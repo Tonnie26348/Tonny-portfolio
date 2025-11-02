@@ -6,10 +6,8 @@
     <title>Projects - Tonny Mutea</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="firebase.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header>
@@ -49,16 +47,16 @@
                 <textarea id="project-description" name="project-description"></textarea>
                 <label for="project-technologies">Technologies Used</label>
                 <input type="text" id="project-technologies" name="project-technologies">
-                <label for="project-image">Upload Project Image</label>
-                <input type="file" id="project-image" name="project-image">
+                <label for="project-image">Project Image URL</label>
+                <input type="text" id="project-image" name="project-image">
                 <label for="project-link">Upload File / GitHub Link</label>
                 <input type="text" id="project-link" name="project-link">
                 <button type="submit" class="btn">Submit</button>
             </form>
         </section>
     </main>
-    <footer>
-        <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS, JavaScript & Firebase</p>
+    <footer class="footer-fixed">
+        <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS, JavaScript & Supabase</p>
     </footer>
     <script src="script.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -76,5 +74,7 @@
 
       requestAnimationFrame(raf)
     </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
 </body>
 </html>

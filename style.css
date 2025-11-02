@@ -50,8 +50,6 @@ footer {
     color: #fff;
     text-align: center;
     padding: 1rem;
-    position: fixed;
-    bottom: 0;
     width: 100%;
 }
 
@@ -65,9 +63,101 @@ body.dark-mode footer {
     padding: 4rem 1rem;
 }
 
+.hero-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.hero-text {
+    text-align: left;
+    max-width: 600px; /* Adjust as needed */
+}
+
+.profile-photo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-photo-container {
+    width: 250px;
+    height: 250px;
+    position: relative;
+}
+
+#profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #333;
+}
+
+body.dark-mode #profile-image {
+    border-color: #fff;
+}
+
+.profile-photo-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #333;
+    font-size: 1.5rem; /* Increased font size */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+body.dark-mode .profile-photo-fallback {
+    background-color: #444;
+    color: #fff;
+}
+
+.photo-buttons {
+    margin-top: 1rem;
+    z-index: 1;
+}
+
+.photo-buttons button {
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 #hero h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-container {
+        flex-direction: column;
+    }
+
+    .hero-text {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .profile-photo-container {
+        margin-top: 2rem;
+    }
+}
+
+.subheading {
+    font-size: 1.5rem;
+    color: #888;
 }
 
 .btn {
@@ -114,6 +204,50 @@ body.dark-mode .btn {
 body.dark-mode #filter-buttons button.active {
     background-color: #fff;
     color: #333;
+}
+
+/* Contact Page */
+#contact {
+    text-align: center;
+}
+
+#contact-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.contact-card {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 300px;
+    text-align: left;
+}
+
+.contact-card h3 {
+    margin-top: 0;
+}
+
+.contact-card a {
+    color: #333;
+    text-decoration: none;
+}
+
+body.dark-mode .contact-card a {
+    color: #fff;
+}
+
+.footer-fixed {
+    position: fixed;
+    bottom: 0;
+}
+
+.closing-message {
+    font-style: italic;
+    color: #888;
+    margin-top: 2rem;
 }
 
 /* Project Gallery */
