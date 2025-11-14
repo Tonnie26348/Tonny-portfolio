@@ -24,36 +24,31 @@
     <main class="premium-container">
         <!-- HERO SECTION -->
         <section class="premium-hero" data-aos="fade-in">
-            <h1 class="premium-h1">Work</h1>
-            <p class="premium-p">This page highlights my personal and academic projects. Each project represents growth in design, programming, and creativity. I continuously update this section with new ideas and experiments.</p>
+            <h1 class="premium-h1">Live Previews</h1>
+            <p class="premium-p">A showcase of my key projects. Select a project from the list to see a live preview directly on this page.</p>
         </section>
 
-        <!-- CONTROLS -->
-        <section class="project-controls-container" data-aos="fade-up">
-            <div class="project-filters">
-                <button class="project-filter-btn active" data-filter="all">All</button>
-                <button class="project-filter-btn" data-filter="Web">Web</button>
-                <button class="project-filter-btn" data-filter="AI">AI</button>
-                <button class="project-filter-btn" data-filter="PHP">PHP</button>
-                <button class="project-filter-btn" data-filter="Firebase">Firebase</button>
+        <!-- LIVE PREVIEW SECTION -->
+        <section class="live-preview-layout" data-aos="fade-up">
+            <div class="project-list-container">
+                <ul class="project-list">
+                    <li><a href="#" class="project-list-item active" data-src="https://whizz001.pythonanywhere.com/">Whizz Platform</a></li>
+                    <li><a href="#" class="project-list-item" data-src="about:blank">Laptop Store (Shopify)</a></li>
+                    <li><a href="#" class="project-list-item" data-src="about:blank">NyumbaSmart Platform</a></li>
+                </ul>
             </div>
-            <div class="project-search">
-                <i class="ri-search-line"></i>
-                <input type="text" id="project-search-input" placeholder="Search projects...">
+            <div class="iframe-container">
+                <iframe id="project-iframe" src="https://whizz001.pythonanywhere.com/"></iframe>
             </div>
         </section>
 
-        <!-- PROJECTS GRID - Content is loaded dynamically by script.js -->
-        <section id="projects-gallery" class="project-grid" data-aos="fade-up" data-aos-delay="200">
-            <!-- Project cards will be injected here by Supabase logic -->
-        </section>
 
         <!-- UPLOAD PROJECT FORM -->
         <section class="premium-hero" data-aos="fade-up">
              <h2 class="premium-h1" style="font-size: 2.5rem;">Upload Project</h2>
         </section>
         
-        <section class="contact-layout" data-aos="fade-up">
+        <section class="single-column-layout" data-aos="fade-up">
             <div class="contact-form-container">
                 <form id="project-form" class="premium-form">
                     <div class="form-group">
@@ -83,28 +78,17 @@
                     <button type="submit" class="btn-primary form-submit-btn">Submit Project</button>
                 </form>
             </div>
-            <div class="contact-info-container">
-                <!-- This column can be empty or have some instructions -->
+            <div class="contact-info-container" style="margin-top: 2rem;">
                  <div class="contact-info-card">
                     <div class="contact-info-icon"><i class="ri-information-line"></i></div>
                     <div class="contact-info-text">
                         <h3 class="contact-info-title">Instructions</h3>
-                        <p class="contact-info-link" style="white-space: normal;">Fill out the form to add a new project to the gallery. Please provide a direct URL for the image (e.g., from a service like Imgur).</p>
+                        <p class="contact-info-link" style="white-space: normal;">Fill out the form to add a new project. This form is for adding smaller projects or case studies; the live previews above are updated manually.</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
-
-    <!-- MODAL -->
-    <div class="project-modal" id="project-modal">
-        <div class="project-modal-content">
-            <button class="project-modal-close" id="project-modal-close"><i class="ri-close-line"></i></button>
-            <div class="project-modal-body">
-                <!-- Content will be injected by JS -->
-            </div>
-        </div>
-    </div>
 
     <footer class="footer-fixed">
         <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS, JavaScript & Supabase</p>

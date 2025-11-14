@@ -9,13 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DARK MODE TOGGLE ---
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     if (darkModeToggle) {
-        // Apply saved theme on load
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
         }
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            // Save theme preference
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('theme', 'dark');
             } else {
@@ -25,204 +23,80 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- PROJECT PAGE LOGIC ---
-    const projectPage = document.getElementById('projects-gallery');
-    if (projectPage) {
-        console.log('Project page detected. Initializing project scripts.');
-        const projectsGallery = document.getElementById('projects-gallery');
-        const projectForm = document.getElementById('project-form');
+    const livePreviewLayout = document.querySelector('.live-preview-layout');
+    if (livePreviewLayout) {
+        console.log('Project page with live preview detected.');
 
-        // Function to display a single project using the new card design
-        function displayProject(project) {
-            // Fallback for missing image
-            const imageUrl = project.imageUrl || 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop';
-            
-            const projectCard = `
-                <div class="project-card" 
-                     data-category="${project.category || 'web'}" 
-                     data-title="${project.title}" 
-                     data-description="${project.description}"
-                     data-aos="fade-up">
+        // --- Live Iframe Switching ---
+        const projectListItems = document.querySelectorAll('.project-list-item');
+        const projectIframe = document.getElementById('project-iframe');
 
-                    <div class="project-card-image-container">
-                        <img src="${imageUrl}" alt="${project.title}">
-                    </div>
-                    <div class="project-card-content">
-                        <div class="project-card-tags">
-                            ${(project.technologies || '').split(',').map(tech => `<span class="project-card-tag">${tech.trim()}</span>`).join('')}
-                        </div>
-                        <h3 class="project-card-title">${project.title}</h3>
-                        <p class="project-card-description">${project.description}</p>
-                        <div class="project-card-buttons">
-                            <button class="btn-secondary project-modal-trigger">View Details</button>
-                            <a href="${project.link}" target="_blank" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
-                            <button class="delete-project-btn" data-id="${project.id}"><i class="ri-delete-bin-line"></i></button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            projectsGallery.innerHTML += projectCard;
-        }
+        projectListItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
 
-        // Function to fetch and load all projects from Supabase
-        async function loadProjects() {
-            const { data: projects, error } = await supabase.from('projects').select('*');
-            if (error) {
-                console.error('Error fetching projects:', error);
-                return;
-            }
-
-            projectsGallery.innerHTML = ''; // Clear existing projects
-            projects.forEach(displayProject);
-            
-            // Re-initialize event listeners for new elements
-            initializeModalTriggers(); 
-            initializeDeleteButtons();
-        }
-
-        // Function to handle project submission
-        projectForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = e.target;
-
-            const title = form['project-title'].value;
-            const description = form['project-description'].value;
-            const category = form['project-category'].value;
-            const technologies = form['project-technologies'].value;
-            const projectImageFile = form['project-image'].files[0];
-            const link = form['project-link'].value;
-
-            let imageUrl = '';
-            if (projectImageFile) {
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('project-images')
-                    .upload(`${Date.now()}_${projectImageFile.name}`, projectImageFile);
-
-                if (uploadError) {
-                    console.error('Error uploading project image:', uploadError);
-                    alert('Error uploading project image.');
-                    return;
-                }
+                // Remove active class from all items
+                projectListItems.forEach(link => link.classList.remove('active'));
                 
-                const { data: { publicUrl } } = supabase.storage
-                    .from('project-images')
-                    .getPublicUrl(uploadData.path);
-                imageUrl = publicUrl;
-            }
+                // Add active class to clicked item
+                item.classList.add('active');
 
-            const { data, error } = await supabase
-                .from('projects')
-                .insert([{ title, description, category, technologies, imageUrl, link }]);
-
-            if (error) {
-                console.error('Error inserting project:', error);
-                alert('Error adding project.');
-            } else {
-                form.reset();
-                loadProjects(); // Refresh the project list
-            }
+                // Update iframe source
+                const newSrc = item.dataset.src;
+                if (newSrc && newSrc !== 'about:blank') {
+                    projectIframe.src = newSrc;
+                } else if (newSrc === 'about:blank') {
+                    projectIframe.src = newSrc;
+                    // Optionally, you could show a "URL not available" message inside the iframe
+                }
+            });
         });
 
-        // Function to initialize delete buttons for projects
-        function initializeDeleteButtons() {
-            projectsGallery.querySelectorAll('.delete-project-btn').forEach(button => {
-                // Prevent multiple listeners
-                if (button.dataset.listenerAttached) return;
-                button.dataset.listenerAttached = true;
+        // --- Project Upload Form Logic (no longer displays on this page, but logic is kept) ---
+        const projectForm = document.getElementById('project-form');
+        if (projectForm) {
+            projectForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = e.target;
 
-                button.addEventListener('click', async (e) => {
-                    const projectId = e.currentTarget.dataset.id;
-                    if (confirm('Are you sure you want to delete this project?')) {
-                        const { error } = await supabase.from('projects').delete().eq('id', projectId);
-                        if (error) {
-                            console.error('Error deleting project:', error);
-                            alert('Error deleting project.');
-                        } else {
-                            loadProjects(); // Refresh list
-                        }
+                const title = form['project-title'].value;
+                const description = form['project-description'].value;
+                const category = form['project-category'].value;
+                const technologies = form['project-technologies'].value;
+                const projectImageFile = form['project-image'].files[0];
+                const link = form['project-link'].value;
+
+                let imageUrl = '';
+                if (projectImageFile) {
+                    const { data: uploadData, error: uploadError } = await supabase.storage
+                        .from('project-images')
+                        .upload(`${Date.now()}_${projectImageFile.name}`, projectImageFile);
+
+                    if (uploadError) {
+                        console.error('Error uploading project image:', uploadError);
+                        alert('Error uploading project image.');
+                        return;
                     }
-                });
-            });
-        }
+                    
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('project-images')
+                        .getPublicUrl(uploadData.path);
+                    imageUrl = publicUrl;
+                }
 
-        // --- Filtering and Searching ---
-        const filterButtons = document.querySelectorAll('.project-filter-btn');
-        const searchInput = document.getElementById('project-search-input');
+                const { data, error } = await supabase
+                    .from('projects')
+                    .insert([{ title, description, category, technologies, imageUrl, link }]);
 
-        function filterAndSearchProjects() {
-            const activeFilter = document.querySelector('.project-filter-btn.active').dataset.filter;
-            const searchTerm = searchInput.value.toLowerCase();
-            const allCards = projectsGallery.querySelectorAll('.project-card');
-
-            allCards.forEach(card => {
-                const cardCategory = card.dataset.category || 'web';
-                const cardTitle = card.dataset.title.toLowerCase();
-                const cardDescription = card.dataset.description.toLowerCase();
-
-                const categoryMatch = activeFilter === 'all' || cardCategory.toLowerCase() === activeFilter.toLowerCase();
-                const searchMatch = cardTitle.includes(searchTerm) || cardDescription.includes(searchTerm);
-
-                if (categoryMatch && searchMatch) {
-                    card.style.display = 'flex';
+                if (error) {
+                    console.error('Error inserting project:', error);
+                    alert('Error adding project.');
                 } else {
-                    card.style.display = 'none';
+                    alert('Project submitted successfully!');
+                    form.reset();
                 }
             });
         }
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                filterAndSearchProjects();
-            });
-        });
-        searchInput.addEventListener('input', filterAndSearchProjects);
-
-        // --- Modal Logic ---
-        const modal = document.getElementById('project-modal');
-        const modalBody = modal.querySelector('.project-modal-body');
-        const closeModalBtn = document.getElementById('project-modal-close');
-
-        function openModal(card) {
-            const image = card.querySelector('.project-card-image-container img').src;
-            const title = card.querySelector('.project-card-title').textContent;
-            const tags = card.querySelector('.project-card-tags').innerHTML;
-            const description = card.dataset.description; // Use full description
-            const sourceLink = card.querySelector('.btn-primary').href;
-
-            modalBody.innerHTML = `
-                <img src="${image}" alt="${title}">
-                <h2>${title}</h2>
-                <div class="project-card-tags" style="margin-bottom: 1.5rem;">${tags}</div>
-                <p>${description}</p>
-                <a href="${sourceLink}" class="btn-primary" target="_blank">View Source <i class="ri-arrow-right-up-line"></i></a>
-            `;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function initializeModalTriggers() {
-            projectsGallery.querySelectorAll('.project-modal-trigger').forEach(button => {
-                if (button.dataset.listenerAttached) return;
-                button.dataset.listenerAttached = true;
-                button.addEventListener('click', (e) => {
-                    const card = e.target.closest('.project-card');
-                    openModal(card);
-                });
-            });
-        }
-
-        closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-        // Initial load
-        loadProjects();
     }
 
 
@@ -232,9 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Contact page detected. Initializing contact scripts.');
         const addContactForm = document.getElementById('add-contact-form');
 
-        // Function to display a single contact using the new card design
         function displayContact(contact) {
-            let iconClass = 'ri-information-line'; // Default icon
+            let iconClass = 'ri-information-line';
             let title = contact.name || 'Contact';
             let linkHtml = '';
 
@@ -268,19 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
             dynamicContactCardsContainer.innerHTML += contactCard;
         }
 
-        // Function to fetch and load all contacts
         async function loadContactDetails() {
             const { data: contacts, error } = await supabase.from('contacts').select('*');
             if (error) {
                 console.error('Error fetching contacts:', error);
                 return;
             }
-            dynamicContactCardsContainer.innerHTML = ''; // Clear existing dynamic contacts
+            dynamicContactCardsContainer.innerHTML = '';
             contacts.forEach(displayContact);
             initializeContactDeleteButtons();
         }
 
-        // Function to handle adding a new contact
         addContactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const form = e.target;
@@ -303,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Function to initialize delete buttons for contacts
         function initializeContactDeleteButtons() {
             dynamicContactCardsContainer.querySelectorAll('.delete-contact-btn').forEach(button => {
                 if (button.dataset.listenerAttached) return;
@@ -322,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Initial load
         loadContactDetails();
     }
 });
