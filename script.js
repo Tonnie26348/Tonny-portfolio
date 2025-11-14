@@ -293,3 +293,141 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+/* --- BEGIN NEW JS ADDITIONS --- */
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- PROJECT PAGE LOGIC ---
+    const projectGrid = document.querySelector('.project-grid');
+    if (projectGrid) {
+        const filterButtons = document.querySelectorAll('.project-filter-btn');
+        const searchInput = document.getElementById('project-search-input');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        // Filter logic
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const filter = button.dataset.filter;
+                filterProjects(filter, searchInput.value);
+            });
+        });
+
+        // Search logic
+        searchInput.addEventListener('input', () => {
+            const activeFilter = document.querySelector('.project-filter-btn.active').dataset.filter;
+            filterProjects(activeFilter, searchInput.value);
+        });
+
+        function filterProjects(category, searchTerm) {
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            projectCards.forEach(card => {
+                const cardCategory = card.dataset.category;
+                const cardTitle = card.dataset.title.toLowerCase();
+                const cardDescription = card.dataset.description.toLowerCase();
+
+                const categoryMatch = category === 'all' || cardCategory === category;
+                const searchMatch = cardTitle.includes(lowerCaseSearchTerm) || cardDescription.includes(lowerCaseSearchTerm);
+
+                if (categoryMatch && searchMatch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    }
+
+    // --- PROJECT MODAL LOGIC ---
+    const modal = document.getElementById('project-modal');
+    if (modal) {
+        const modalBody = modal.querySelector('.project-modal-body');
+        const closeModalBtn = document.getElementById('project-modal-close');
+        const triggerButtons = document.querySelectorAll('.project-modal-trigger');
+
+        function openModal(card) {
+            const image = card.querySelector('.project-card-image-container img').src;
+            const title = card.querySelector('.project-card-title').textContent;
+            const description = card.querySelector('.project-card-description').textContent;
+            const tags = card.querySelector('.project-card-tags').innerHTML;
+            const sourceLink = card.querySelector('.btn-primary').href;
+
+            modalBody.innerHTML = `
+                <img src="${image}" alt="${title}">
+                <h2>${title}</h2>
+                <div class="project-card-tags" style="margin-bottom: 1.5rem;">${tags}</div>
+                <p>This is a more detailed description of the project. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
+                <a href="${sourceLink}" class="btn-primary" target="_blank">View Source <i class="ri-arrow-right-up-line"></i></a>
+            `;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        triggerButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.project-card');
+                openModal(card);
+            });
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    }
+
+    // --- CONTACT PAGE LOGIC ---
+    const contactForm = document.getElementById('premium-contact-form');
+    if (contactForm) {
+        const successMessage = document.getElementById('form-success-message');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Basic validation
+            const name = contactForm.querySelector('#name').value;
+            const email = contactForm.querySelector('#email').value;
+            const message = contactForm.querySelector('#message').value;
+
+            if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
+                alert('Please fill out all fields.');
+                return;
+            }
+
+            // On success
+            contactForm.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            // Here you would typically send the form data to a server or service like Supabase
+            // For example:
+            /*
+            supabase.from('messages').insert([
+                { name: name, email: email, message: message }
+            ]).then(response => {
+                if (response.error) {
+                    console.error('Error sending message:', response.error);
+                    alert('Sorry, there was an error sending your message.');
+                    contactForm.style.display = 'flex';
+                    successMessage.style.display = 'none';
+                } else {
+                    console.log('Message sent successfully!');
+                }
+            });
+            */
+        });
+    }
+});

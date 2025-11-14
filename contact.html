@@ -6,7 +6,7 @@
     <title>Contact - Tonny Mutea</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -20,52 +20,95 @@
         </nav>
         <button id="dark-mode-toggle">Dark Mode</button>
     </header>
-    <main>
-        <section id="contact" data-aos="fade-in">
-            <h1 data-aos="fade-up">Let’s Connect</h1>
-            <p data-aos="fade-up">I’m always open to new ideas, collaborations, or job opportunities. Whether you have a project in mind, need help with web development, or just want to chat about tech, feel free to reach out.</p>
-            <div id="contact-details-container" data-aos="fade-up"></div>
-            <div id="add-contact-form-container" data-aos="fade-up">
-                <h2>Add Contact Detail</h2>
-                <form id="add-contact-form">
-                    <label for="contact-name">Name</label>
-                    <input type="text" id="contact-name" name="contact-name">
-                    <label for="contact-email">Email Address</label>
-                    <input type="email" id="contact-email" name="contact-email">
-                    <label for="contact-linkedin">LinkedIn Profile</label>
-                    <input type="text" id="contact-linkedin" name="contact-linkedin">
-                    <label for="contact-github">GitHub Profile</label>
-                    <input type="text" id="contact-github" name="contact-github">
-                    <label for="contact-whatsapp">WhatsApp Number</label>
-                    <input type="text" id="contact-whatsapp" name="contact-whatsapp">
-                    <label for="contact-custom">Custom Link</label>
-                    <input type="text" id="contact-custom" name="contact-custom">
-                    <button type="submit" class="btn">Add Contact</button>
+
+    <main class="premium-container">
+        <!-- HERO SECTION -->
+        <section class="premium-hero" data-aos="fade-in">
+            <h1 class="premium-h1">Get in Touch</h1>
+            <p class="premium-p">Have a project in mind, a question, or just want to say hello? I’d love to hear from you. Fill out the form below or use one of the contact methods to reach out.</p>
+        </section>
+
+        <!-- CONTACT LAYOUT -->
+        <section class="contact-layout" data-aos="fade-up" data-aos-delay="200">
+            <!-- Left Column: Form -->
+            <div class="contact-form-container">
+                <form id="premium-contact-form" class="premium-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" placeholder="How can I help you?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary form-submit-btn">Send Message</button>
                 </form>
+                <div id="form-success-message" class="form-success-message" style="display: none;">
+                    <i class="ri-checkbox-circle-fill"></i>
+                    <h3>Message Sent!</h3>
+                    <p>Thanks for reaching out. I'll get back to you as soon as possible.</p>
+                </div>
             </div>
-            <p class="closing-message" data-aos="fade-up">I’ll get back to you as soon as possible. Let’s build something amazing together!</p>
+
+            <!-- Right Column: Info Cards -->
+            <div class="contact-info-container">
+                <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="ri-mail-send-line"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">Email</h3>
+                        <a href="mailto:tonnymutea@gmail.com" class="contact-info-link">tonnymutea@gmail.com</a>
+                    </div>
+                </div>
+                <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="ri-map-pin-line"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">Location</h3>
+                        <p class="contact-info-link">Nairobi, Kenya</p>
+                    </div>
+                </div>
+                <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="ri-github-fill"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">GitHub</h3>
+                        <a href="https://github.com/tonnie26348" target="_blank" class="contact-info-link">@tonnie26348</a>
+                    </div>
+                </div>
+                <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="ri-linkedin-box-fill"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">LinkedIn</h3>
+                        <a href="https://www.linkedin.com/in/tonny-mutea-a6a39a250/" target="_blank" class="contact-info-link">Tonny Mutea</a>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
+
     <footer class="footer-fixed">
         <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS, JavaScript & Supabase</p>
     </footer>
-    <script src="script.js"></script>
+
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-      AOS.init();
+      AOS.init({
+          duration: 800,
+          once: true
+      });
     </script>
     <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
     <script>
       const lenis = new Lenis()
-
       function raf(time) {
         lenis.raf(time)
         requestAnimationFrame(raf)
       }
-
       requestAnimationFrame(raf)
     </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>
 </html>
