@@ -62,9 +62,45 @@
                 </form>
             </div>
 
-            <!-- Right Column: Info Cards - Content is loaded dynamically by script.js -->
-            <div id="contact-details-container" class="contact-info-container">
-                <!-- Contact cards will be injected here by Supabase logic -->
+            <!-- Right Column: Info Cards - Static and Dynamic -->
+            <div class="contact-info-container">
+                <h2 class="premium-h1" style="font-size: 2rem; text-align: left; margin-bottom: 2rem;">My Details</h2>
+                <div class="static-contact-details">
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="ri-user-line"></i></div>
+                        <div class="contact-info-text">
+                            <h3 class="contact-info-title">Name</h3>
+                            <p class="contact-info-link">Tonny Mutea</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="ri-phone-line"></i></div>
+                        <div class="contact-info-text">
+                            <h3 class="contact-info-title">Phone</h3>
+                            <a href="tel:+254798121497" class="contact-info-link">+254 798 121497</a>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="ri-mail-send-line"></i></div>
+                        <div class="contact-info-text">
+                            <h3 class="contact-info-title">Email</h3>
+                            <a href="mailto:tonnymutea7@gmail.com" class="contact-info-link">tonnymutea7@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="ri-map-pin-line"></i></div>
+                        <div class="contact-info-text">
+                            <h3 class="contact-info-title">Location</h3>
+                            <p class="contact-info-link">Nairobi, Kenya</p>
+                        </div>
+                    </div>
+                    <!-- Add other static details here if needed -->
+                </div>
+
+                <h2 class="premium-h1" style="font-size: 2rem; text-align: left; margin-top: 4rem; margin-bottom: 2rem;">Other Contacts</h2>
+                <div id="dynamic-contact-cards" class="dynamic-contact-cards">
+                    <!-- Dynamic contact cards will be injected here by Supabase logic -->
+                </div>
             </div>
         </section>
     </main>

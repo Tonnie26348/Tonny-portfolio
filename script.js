@@ -227,41 +227,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- CONTACT PAGE LOGIC ---
-    const contactPage = document.getElementById('contact-details-container');
-    if (contactPage) {
+    const dynamicContactCardsContainer = document.getElementById('dynamic-contact-cards');
+    if (dynamicContactCardsContainer) {
         console.log('Contact page detected. Initializing contact scripts.');
-        const contactDetailsContainer = document.getElementById('contact-details-container');
         const addContactForm = document.getElementById('add-contact-form');
 
         // Function to display a single contact using the new card design
         function displayContact(contact) {
-            let contactCardHTML = '<div class="contact-info-card" data-aos="fade-up">';
-            
-            // Delete Button
-            contactCardHTML += `<button class="delete-contact-btn" data-id="${contact.id}"><i class="ri-delete-bin-line"></i></button>`;
+            let iconClass = 'ri-information-line'; // Default icon
+            let title = contact.name || 'Contact';
+            let linkHtml = '';
 
-            // Email
-            if(contact.email) {
-                contactCardHTML += `
-                    <div class="contact-info-icon"><i class="ri-mail-send-line"></i></div>
-                    <div class="contact-info-text">
-                        <h3 class="contact-info-title">${contact.name || 'Email'}</h3>
-                        <a href="mailto:${contact.email}" class="contact-info-link">${contact.email}</a>
-                    </div>`;
+            if (contact.email) {
+                iconClass = 'ri-mail-send-line';
+                linkHtml = `<a href="mailto:${contact.email}" class="contact-info-link">${contact.email}</a>`;
+            } else if (contact.linkedin) {
+                iconClass = 'ri-linkedin-box-fill';
+                linkHtml = `<a href="${contact.linkedin}" target="_blank" class="contact-info-link">LinkedIn Profile</a>`;
+            } else if (contact.github) {
+                iconClass = 'ri-github-fill';
+                linkHtml = `<a href="${contact.github}" target="_blank" class="contact-info-link">GitHub Profile</a>`;
+            } else if (contact.whatsapp) {
+                iconClass = 'ri-whatsapp-line';
+                linkHtml = `<a href="https://wa.me/${contact.whatsapp}" target="_blank" class="contact-info-link">${contact.whatsapp}</a>`;
+            } else if (contact.custom) {
+                iconClass = 'ri-link';
+                linkHtml = `<a href="${contact.custom}" target="_blank" class="contact-info-link">${contact.custom}</a>`;
             }
-            // You can add more specific icons for LinkedIn, GitHub etc.
-            else if(contact.linkedin) {
-                 contactCardHTML += `
-                    <div class="contact-info-icon"><i class="ri-linkedin-box-fill"></i></div>
-                    <div class="contact-info-text">
-                        <h3 class="contact-info-title">${contact.name}</h3>
-                        <a href="${contact.linkedin}" target="_blank" class="contact-info-link">View LinkedIn</a>
-                    </div>`;
-            }
-            // Add other conditions for github, whatsapp etc.
 
-            contactCardHTML += '</div>';
-            contactDetailsContainer.innerHTML += contactCardHTML;
+            const contactCard = `
+                <div class="contact-info-card" data-aos="fade-up">
+                    <div class="contact-info-icon"><i class="${iconClass}"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">${title}</h3>
+                        ${linkHtml}
+                    </div>
+                    <button class="delete-contact-btn" data-id="${contact.id}"><i class="ri-delete-bin-line"></i></button>
+                </div>
+            `;
+            dynamicContactCardsContainer.innerHTML += contactCard;
         }
 
         // Function to fetch and load all contacts
@@ -271,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error fetching contacts:', error);
                 return;
             }
-            contactDetailsContainer.innerHTML = '';
+            dynamicContactCardsContainer.innerHTML = ''; // Clear existing dynamic contacts
             contacts.forEach(displayContact);
             initializeContactDeleteButtons();
         }
@@ -301,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Function to initialize delete buttons for contacts
         function initializeContactDeleteButtons() {
-            contactDetailsContainer.querySelectorAll('.delete-contact-btn').forEach(button => {
+            dynamicContactCardsContainer.querySelectorAll('.delete-contact-btn').forEach(button => {
                 if (button.dataset.listenerAttached) return;
                 button.dataset.listenerAttached = true;
                 button.addEventListener('click', async (e) => {
