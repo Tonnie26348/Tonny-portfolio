@@ -324,6 +324,10 @@ body.dark-mode {
     padding: 0 2rem;
 }
 
+main.premium-container {
+    padding-bottom: 120px;
+}
+
 .premium-hero {
     text-align: center;
     padding: 80px 0;
