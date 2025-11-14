@@ -23,37 +23,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- PROJECT PAGE LOGIC ---
-    const livePreviewLayout = document.querySelector('.live-preview-layout');
-    if (livePreviewLayout) {
-        console.log('Project page with live preview detected.');
+    const projectPageContainer = document.querySelector('.project-grid'); // Check for any project grid
+    if (projectPageContainer) {
+        console.log('Project page detected. Initializing project scripts.');
 
-        // --- Live Iframe Switching ---
-        const projectListItems = document.querySelectorAll('.project-list-item');
-        const projectIframe = document.getElementById('project-iframe');
-
-        projectListItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                // Remove active class from all items
-                projectListItems.forEach(link => link.classList.remove('active'));
-                
-                // Add active class to clicked item
-                item.classList.add('active');
-
-                // Update iframe source
-                const newSrc = item.dataset.src;
-                if (newSrc && newSrc !== 'about:blank') {
-                    projectIframe.src = newSrc;
-                } else if (newSrc === 'about:blank') {
-                    projectIframe.src = newSrc;
-                    // Optionally, you could show a "URL not available" message inside the iframe
-                }
-            });
-        });
-
-        // --- Project Upload Form Logic (no longer displays on this page, but logic is kept) ---
+        const featuredProjectsGrid = document.querySelector('section.project-grid:first-of-type');
+        const uploadedProjectsGallery = document.getElementById('projects-gallery');
         const projectForm = document.getElementById('project-form');
+
+        // Function to display a single project using the new card design
+        function displayProject(project, targetElement) {
+            // Fallback for missing image
+            const imageUrl = project.imageUrl || 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop';
+            
+            const projectCard = `
+                <div class="project-card" 
+                     data-category="${project.category || 'Web Application'}" 
+                     data-title="${project.title}" 
+                     data-description="${project.description}"
+                     data-aos="fade-up">
+
+                    <div class="project-card-image-container">
+                        <img src="${imageUrl}" alt="${project.title}">
+                    </div>
+                    <div class="project-card-content">
+                        <div class="project-card-tags">
+                            ${(project.technologies || '').split(',').map(tech => `<span class="project-card-tag">${tech.trim()}</span>`).join('')}
+                        </div>
+                        <h3 class="project-card-title">${project.title}</h3>
+                        <p class="project-card-description">${project.description}</p>
+                        <div class="project-card-buttons">
+                            ${project.liveUrl ? `<a href="${project.liveUrl}" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>` : ''}
+                            <a href="${project.link}" target="_blank" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                            ${targetElement === uploadedProjectsGallery ? `<button class="delete-project-btn" data-id="${project.id}"><i class="ri-delete-bin-line"></i></button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            targetElement.innerHTML += projectCard;
+        }
+
+        // Function to fetch and load uploaded projects from Supabase
+        async function loadUploadedProjects() {
+            if (!uploadedProjectsGallery) return; // Only run if the dynamic gallery exists
+
+            const { data: projects, error } = await supabase.from('projects').select('*');
+            if (error) {
+                console.error('Error fetching uploaded projects:', error);
+                return;
+            }
+
+            uploadedProjectsGallery.innerHTML = ''; // Clear existing projects
+            projects.forEach(project => displayProject(project, uploadedProjectsGallery));
+            
+            initializeModalTriggers(); 
+            initializeDeleteButtons();
+        }
+
+        // Function to handle project submission
         if (projectForm) {
             projectForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -65,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const technologies = form['project-technologies'].value;
                 const projectImageFile = form['project-image'].files[0];
                 const link = form['project-link'].value;
+                const liveUrl = ''; // No live URL input in form, default to empty
 
                 let imageUrl = '';
                 if (projectImageFile) {
@@ -86,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const { data, error } = await supabase
                     .from('projects')
-                    .insert([{ title, description, category, technologies, imageUrl, link }]);
+                    .insert([{ title, description, category, technologies, imageUrl, link, liveUrl }]);
 
                 if (error) {
                     console.error('Error inserting project:', error);
@@ -94,9 +122,119 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     alert('Project submitted successfully!');
                     form.reset();
+                    loadUploadedProjects(); // Refresh the uploaded project list
                 }
             });
         }
+
+        // Function to initialize delete buttons for projects
+        function initializeDeleteButtons() {
+            if (!uploadedProjectsGallery) return;
+            uploadedProjectsGallery.querySelectorAll('.delete-project-btn').forEach(button => {
+                if (button.dataset.listenerAttached) return;
+                button.dataset.listenerAttached = true;
+
+                button.addEventListener('click', async (e) => {
+                    const projectId = e.currentTarget.dataset.id;
+                    if (confirm('Are you sure you want to delete this project?')) {
+                        const { error } = await supabase.from('projects').delete().eq('id', projectId);
+                        if (error) {
+                            console.error('Error deleting project:', error);
+                            alert('Error deleting project.');
+                        } else {
+                            loadUploadedProjects(); // Refresh list
+                        }
+                    }
+                });
+            });
+        }
+
+        // --- Filtering and Searching ---
+        const filterButtons = document.querySelectorAll('.project-filter-btn');
+        const searchInput = document.getElementById('project-search-input');
+
+        function filterAndSearchProjects() {
+            const activeFilter = document.querySelector('.project-filter-btn.active').dataset.filter;
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // Select all project cards from both featured and uploaded sections
+            const allCards = document.querySelectorAll('.project-grid .project-card');
+
+            allCards.forEach(card => {
+                const cardCategory = card.dataset.category || 'Web Application';
+                const cardTitle = card.dataset.title.toLowerCase();
+                const cardDescription = card.dataset.description.toLowerCase();
+
+                const categoryMatch = activeFilter === 'all' || cardCategory.toLowerCase() === activeFilter.toLowerCase();
+                const searchMatch = cardTitle.includes(searchTerm) || cardDescription.includes(searchTerm);
+
+                if (categoryMatch && searchMatch) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterAndSearchProjects();
+            });
+        });
+        searchInput.addEventListener('input', filterAndSearchProjects);
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('project-modal');
+        const modalBody = modal.querySelector('.project-modal-body');
+        const closeModalBtn = document.getElementById('project-modal-close');
+
+        function openModal(card) {
+            const image = card.querySelector('.project-card-image-container img').src;
+            const title = card.querySelector('.project-card-title').textContent;
+            const tags = card.querySelector('.project-card-tags').innerHTML;
+            const description = card.dataset.description; // Use full description
+            const sourceLink = card.querySelector('.btn-primary').href;
+            const liveUrlLink = card.querySelector('.btn-secondary') ? card.querySelector('.btn-secondary').href : null;
+
+
+            modalBody.innerHTML = `
+                <img src="${image}" alt="${title}">
+                <h2>${title}</h2>
+                <div class="project-card-tags" style="margin-bottom: 1.5rem;">${tags}</div>
+                <p>${description}</p>
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    ${liveUrlLink ? `<a href="${liveUrlLink}" class="btn-secondary" target="_blank">Live URL <i class="ri-external-link-line"></i></a>` : ''}
+                    <a href="${sourceLink}" class="btn-primary" target="_blank">Source <i class="ri-arrow-right-up-line"></i></a>
+                </div>
+            `;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function initializeModalTriggers() {
+            document.querySelectorAll('.project-modal-trigger').forEach(button => { // Select all triggers
+                if (button.dataset.listenerAttached) return;
+                button.dataset.listenerAttached = true;
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.project-card');
+                    openModal(card);
+                });
+            });
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+        // Initial load for uploaded projects
+        loadUploadedProjects();
     }
 
 

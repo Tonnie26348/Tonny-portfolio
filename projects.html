@@ -24,28 +24,98 @@
     <main class="premium-container">
         <!-- HERO SECTION -->
         <section class="premium-hero" data-aos="fade-in">
-            <h1 class="premium-h1">Live Previews</h1>
+            <h1 class="premium-h1">Work</h1>
             <p class="premium-p">A showcase of my key projects. Select a project from the list to see a live preview directly on this page.</p>
+            <p class="premium-p">This page highlights my personal and academic projects. Each project represents growth in design, programming, and creativity. I continuously update this section with new ideas and experiments.</p>
         </section>
 
-        <!-- LIVE PREVIEW SECTION -->
-        <section class="live-preview-layout" data-aos="fade-up">
-            <div class="project-list-container">
-                <ul class="project-list">
-                    <li><a href="#" class="project-list-item active" data-src="https://whizz001.pythonanywhere.com/">Whizz Platform</a></li>
-                    <li><a href="#" class="project-list-item" data-src="about:blank">Laptop Store (Shopify)</a></li>
-                    <li><a href="#" class="project-list-item" data-src="about:blank">NyumbaSmart Platform</a></li>
-                </ul>
+        <!-- CONTROLS -->
+        <section class="project-controls-container" data-aos="fade-up">
+            <div class="project-filters">
+                <button class="project-filter-btn active" data-filter="all">All</button>
+                <button class="project-filter-btn" data-filter="Web Application">Web App</button>
+                <button class="project-filter-btn" data-filter="E-commerce">E-commerce</button>
+                <button class="project-filter-btn" data-filter="IoT">IoT</button>
             </div>
-            <div class="iframe-container">
-                <iframe id="project-iframe" src="https://whizz001.pythonanywhere.com/"></iframe>
+            <div class="project-search">
+                <i class="ri-search-line"></i>
+                <input type="text" id="project-search-input" placeholder="Search all projects...">
             </div>
         </section>
 
+        <!-- FEATURED PROJECTS -->
+        <h2 class="premium-h1" style="font-size: 2.5rem; margin-bottom: 2rem;" data-aos="fade-up">Featured Projects</h2>
+        <section class="project-grid" data-aos="fade-up">
+            <!-- Project Card 1: Whizz Platform -->
+            <div class="project-card" data-category="Web Application" data-title="Whizz Platform" data-description="A comprehensive web platform for managing services and operations, built with a Python backend.">
+                <div class="project-card-image-container">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" alt="Whizz Platform">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-card-tags">
+                        <span class="project-card-tag">Python</span>
+                        <span class="project-card-tag">Flask</span>
+                        <span class="project-card-tag">HTML/CSS</span>
+                    </div>
+                    <h3 class="project-card-title">Whizz Platform</h3>
+                    <p class="project-card-description">A comprehensive web platform for managing services and operations, built with a Python backend.</p>
+                    <div class="project-card-buttons">
+                        <a href="https://whizz001.pythonanywhere.com/" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
+                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Card 2: Laptop Store -->
+            <div class="project-card" data-category="E-commerce" data-title="Laptop Store (Shopify)" data-description="An e-commerce store for selling laptops, built on the Shopify platform with a custom theme.">
+                <div class="project-card-image-container">
+                    <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=1964&auto=format&fit=crop" alt="Laptop Store">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-card-tags">
+                        <span class="project-card-tag">Shopify</span>
+                        <span class="project-card-tag">Liquid</span>
+                        <span class="project-card-tag">E-commerce</span>
+                    </div>
+                    <h3 class="project-card-title">Laptop Store (Shopify)</h3>
+                    <p class="project-card-description">An e-commerce store for selling laptops, built on the Shopify platform with a custom theme.</p>
+                    <div class="project-card-buttons">
+                        <a href="#" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
+                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Card 3: NyumbaSmart -->
+            <div class="project-card" data-category="IoT" data-title="NyumbaSmart Platform" data-description="A web platform for smart home management and automation, connecting various IoT devices.">
+                <div class="project-card-image-container">
+                    <img src="https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=2070&auto=format&fit=crop" alt="NyumbaSmart Platform">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-card-tags">
+                        <span class="project-card-tag">React</span>
+                        <span class="project-card-tag">Node.js</span>
+                        <span class="project-card-tag">IoT</span>
+                    </div>
+                    <h3 class="project-card-title">NyumbaSmart Platform</h3>
+                    <p class="project-card-description">A web platform for smart home management and automation, connecting various IoT devices.</p>
+                    <div class="project-card-buttons">
+                        <a href="#" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
+                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OTHER (UPLOADED) PROJECTS -->
+        <h2 class="premium-h1" style="font-size: 2.5rem; margin-top: 80px; margin-bottom: 2rem;" data-aos="fade-up">Other Projects</h2>
+        <section id="projects-gallery" class="project-grid" data-aos="fade-up">
+            <!-- Dynamically loaded projects from Supabase will appear here -->
+        </section>
 
         <!-- UPLOAD PROJECT FORM -->
-        <section class="premium-hero" data-aos="fade-up">
-             <h2 class="premium-h1" style="font-size: 2.5rem;">Upload Project</h2>
+        <section class="premium-hero" data-aos="fade-up" style="margin-bottom: 40px; padding-top: 80px;">
+             <h2 class="premium-h1" style="font-size: 2.5rem;">Upload a Project</h2>
         </section>
         
         <section class="single-column-layout" data-aos="fade-up">
@@ -61,10 +131,10 @@
                     </div>
                     <div class="form-group">
                         <label for="project-category">Category</label>
-                        <input type="text" id="project-category" name="project-category" placeholder="e.g., Web, AI, PHP" required>
+                        <input type="text" id="project-category" name="project-category" placeholder="e.g., Web Application, E-commerce, IoT" required>
                     </div>
                     <div class="form-group">
-                        <label for="project-technologies">Technologies Used</label>
+                        <label for="project-technologies">Technologies Used (comma-separated)</label>
                         <input type="text" id="project-technologies" name="project-technologies" placeholder="e.g., React, Node.js, Figma" required>
                     </div>
                     <div class="form-group">
@@ -77,15 +147,6 @@
                     </div>
                     <button type="submit" class="btn-primary form-submit-btn">Submit Project</button>
                 </form>
-            </div>
-            <div class="contact-info-container" style="margin-top: 2rem;">
-                 <div class="contact-info-card">
-                    <div class="contact-info-icon"><i class="ri-information-line"></i></div>
-                    <div class="contact-info-text">
-                        <h3 class="contact-info-title">Instructions</h3>
-                        <p class="contact-info-link" style="white-space: normal;">Fill out the form to add a new project. This form is for adding smaller projects or case studies; the live previews above are updated manually.</p>
-                    </div>
-                </div>
             </div>
         </section>
     </main>
