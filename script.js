@@ -97,9 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (deleteButton) {
         deleteButton.addEventListener('click', async () => {
             if (confirm('Are you sure you want to delete your profile photo?')) {
+                const { data: profileData, error: fetchError } = await supabase
+                    .from('profile')
+                    .select('photo_url')
+                    .single();
+
+                if (fetchError || !profileData || !profileData.photo_url) {
+                    console.error('Error fetching profile photo URL or no photo found:', fetchError);
+                    return;
+                }
+
+                const photoUrl = profileData.photo_url;
+                const fileName = photoUrl.substring(photoUrl.lastIndexOf('/') + 1);
+
                 const { data, error } = await supabase.storage
                     .from('profile-photos')
-                    .remove(['YOUR_PHOTO_NAME']); // You need to get the photo name from the database
+                    .remove([fileName]);
 
                 if (error) {
                     console.error('Error deleting photo:', error);
@@ -131,8 +144,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = projectForm['project-title'].value;
             const description = projectForm['project-description'].value;
             const technologies = projectForm['project-technologies'].value;
-            const imageUrl = projectForm['project-image'].value;
+            const projectImageFile = projectForm['project-image'].files[0]; // Get the file object
             const link = projectForm['project-link'].value;
+
+            let imageUrl = '';
+            if (projectImageFile) {
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('project-images') // Assuming a bucket named 'project-images'
+                    .upload(projectImageFile.name, projectImageFile, { upsert: true });
+
+                if (uploadError) {
+                    console.error('Error uploading project image:', uploadError);
+                    alert('Error uploading project image.');
+                    return;
+                }
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from('project-images')
+                    .getPublicUrl(projectImageFile.name);
+                imageUrl = publicUrl;
+            }
 
             const { data, error } = await supabase
                 .from('projects')
@@ -180,10 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         projectsGallery.innerHTML += projectCard;
+    }
 
-        const deleteButtons = document.querySelectorAll('.delete-project-btn');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
+    if (projectsGallery) {
+        loadProjects();
+
+        // Event delegation for delete project buttons
+        projectsGallery.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-project-btn')) {
                 const projectId = e.target.dataset.id;
                 const { error } = await supabase
                     .from('projects')
@@ -195,12 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     loadProjects();
                 }
-            });
+            }
         });
-    }
-
-    if (projectsGallery) {
-        loadProjects();
     }
 
     // Contact Details
@@ -238,10 +269,14 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         contactDetailsContainer.innerHTML += contactCard;
+    }
 
-        const deleteButtons = document.querySelectorAll('.delete-contact-btn');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
+    if (contactDetailsContainer) {
+        loadContactDetails();
+
+        // Event delegation for delete contact buttons
+        contactDetailsContainer.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-contact-btn')) {
                 const contactId = e.target.dataset.id;
                 const { error } = await supabase
                     .from('contacts')
@@ -253,36 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     loadContactDetails();
                 }
-            });
-        });
-    }
-
-    if (addContactForm) {
-        addContactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const name = addContactForm['contact-name'].value;
-            const email = addContactForm['contact-email'].value;
-            const linkedin = addContactForm['contact-linkedin'].value;
-            const github = addContactForm['contact-github'].value;
-            const whatsapp = addContactForm['contact-whatsapp'].value;
-            const custom = addContactForm['contact-custom'].value;
-
-            const { data, error } = await supabase
-                .from('contacts')
-                .insert([{ name, email, linkedin, github, whatsapp, custom }]);
-
-            if (error) {
-                console.error('Error inserting contact:', error);
-            } else {
-                addContactForm.reset();
-                loadContactDetails();
             }
         });
-    }
-
-    if (contactDetailsContainer) {
-        loadContactDetails();
     }
 
 });
