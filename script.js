@@ -1,334 +1,165 @@
+// --- SUPABASE CLIENT SETUP ---
 const supabaseUrl = 'https://itxcsjstfibaglsjdfqt.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eGNzanN0ZmliYWdsc2pkZnF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDE5MDUsImV4cCI6MjA3NzU3NzkwNX0.XaWjEhjV_PQ8-cbd4pEAfayVpr5_0tVgImZnVegyTjU';
-
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded and parsed. Initializing scripts.');
 
-    console.log('DOM fully loaded and parsed');
-
-    // Dark Mode Toggle
+    // --- DARK MODE TOGGLE ---
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     if (darkModeToggle) {
+        // Apply saved theme on load
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
         darkModeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-        });
-    }
-
-    // Profile Photo Management
-    const profileImage = document.getElementById('profile-image');
-    const uploadButton = document.getElementById('upload-button');
-    const deleteButton = document.getElementById('delete-button');
-
-    async function loadProfilePhoto() {
-        console.log('loadProfilePhoto function called');
-        const { data, error } = await supabase
-            .from('profile')
-            .select('photo_url')
-            .single();
-
-        console.log('Supabase data:', data);
-        console.log('Supabase error:', error);
-
-        const existingFallback = document.querySelector('.profile-photo-fallback');
-        if (existingFallback) {
-            existingFallback.remove();
-        }
-
-        if (data && data.photo_url) {
-            profileImage.style.display = 'block';
-            profileImage.src = data.photo_url;
-        } else {
-            createFallback();
-        }
-    }
-
-    function createFallback() {
-        console.log('createFallback function called');
-        profileImage.style.display = 'none';
-        const fallback = document.createElement('div');
-        fallback.classList.add('profile-photo-fallback');
-        fallback.textContent = 'Profile Photo';
-        profileImage.parentElement.appendChild(fallback);
-    }
-
-    if (profileImage) {
-        loadProfilePhoto();
-    }
-
-    if (uploadButton) {
-        uploadButton.addEventListener('click', async () => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            fileInput.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const { data, error } = await supabase.storage
-                        .from('profile-photos')
-                        .upload(file.name, file, { upsert: true });
-
-                    if (error) {
-                        console.error('Error uploading photo:', error);
-                        return;
-                    }
-
-                    const { data: { publicUrl } } = supabase.storage
-                        .from('profile-photos')
-                        .getPublicUrl(file.name);
-
-                    const { error: dbError } = await supabase
-                        .from('profile')
-                        .update({ photo_url: publicUrl })
-                        .eq('id', 1); // Assuming a single user profile
-
-                    if (dbError) {
-                        console.error('Error saving photo URL:', dbError);
-                    } else {
-                        alert('Profile photo uploaded successfully!');
-                        loadProfilePhoto();
-                    }
-                }
-            };
-            fileInput.click();
-        });
-    }
-
-    if (deleteButton) {
-        deleteButton.addEventListener('click', async () => {
-            if (confirm('Are you sure you want to delete your profile photo?')) {
-                const { data: profileData, error: fetchError } = await supabase
-                    .from('profile')
-                    .select('photo_url')
-                    .single();
-
-                if (fetchError || !profileData || !profileData.photo_url) {
-                    console.error('Error fetching profile photo URL or no photo found:', fetchError);
-                    return;
-                }
-
-                const photoUrl = profileData.photo_url;
-                const fileName = photoUrl.substring(photoUrl.lastIndexOf('/') + 1);
-
-                const { data, error } = await supabase.storage
-                    .from('profile-photos')
-                    .remove([fileName]);
-
-                if (error) {
-                    console.error('Error deleting photo:', error);
-                    return;
-                }
-
-                const { error: dbError } = await supabase
-                    .from('profile')
-                    .update({ photo_url: null })
-                    .eq('id', 1); // Assuming a single user profile
-
-                if (dbError) {
-                    console.error('Error deleting photo URL:', dbError);
-                } else {
-                    alert('Profile photo deleted successfully!');
-                    loadProfilePhoto();
-                }
+            // Save theme preference
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
             }
         });
     }
 
-    // Project Upload
-    const projectForm = document.getElementById('project-form');
+    // --- PROJECT PAGE LOGIC ---
+    const projectPage = document.getElementById('projects-gallery');
+    if (projectPage) {
+        console.log('Project page detected. Initializing project scripts.');
+        const projectsGallery = document.getElementById('projects-gallery');
+        const projectForm = document.getElementById('project-form');
 
-    if (projectForm) {
+        // Function to display a single project using the new card design
+        function displayProject(project) {
+            // Fallback for missing image
+            const imageUrl = project.imageUrl || 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop';
+            
+            const projectCard = `
+                <div class="project-card" 
+                     data-category="${project.category || 'web'}" 
+                     data-title="${project.title}" 
+                     data-description="${project.description}"
+                     data-aos="fade-up">
+
+                    <div class="project-card-image-container">
+                        <img src="${imageUrl}" alt="${project.title}">
+                    </div>
+                    <div class="project-card-content">
+                        <div class="project-card-tags">
+                            ${(project.technologies || '').split(',').map(tech => `<span class="project-card-tag">${tech.trim()}</span>`).join('')}
+                        </div>
+                        <h3 class="project-card-title">${project.title}</h3>
+                        <p class="project-card-description">${project.description}</p>
+                        <div class="project-card-buttons">
+                            <button class="btn-secondary project-modal-trigger">View Details</button>
+                            <a href="${project.link}" target="_blank" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                            <button class="delete-project-btn" data-id="${project.id}"><i class="ri-delete-bin-line"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            projectsGallery.innerHTML += projectCard;
+        }
+
+        // Function to fetch and load all projects from Supabase
+        async function loadProjects() {
+            const { data: projects, error } = await supabase.from('projects').select('*');
+            if (error) {
+                console.error('Error fetching projects:', error);
+                return;
+            }
+
+            projectsGallery.innerHTML = ''; // Clear existing projects
+            projects.forEach(displayProject);
+            
+            // Re-initialize event listeners for new elements
+            initializeModalTriggers(); 
+            initializeDeleteButtons();
+        }
+
+        // Function to handle project submission
         projectForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const form = e.target;
 
-            const title = projectForm['project-title'].value;
-            const description = projectForm['project-description'].value;
-            const technologies = projectForm['project-technologies'].value;
-            const projectImageFile = projectForm['project-image'].files[0]; // Get the file object
-            const link = projectForm['project-link'].value;
+            const title = form['project-title'].value;
+            const description = form['project-description'].value;
+            const category = form['project-category'].value;
+            const technologies = form['project-technologies'].value;
+            const projectImageFile = form['project-image'].files[0];
+            const link = form['project-link'].value;
 
             let imageUrl = '';
             if (projectImageFile) {
                 const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('project-images') // Assuming a bucket named 'project-images'
-                    .upload(projectImageFile.name, projectImageFile, { upsert: true });
+                    .from('project-images')
+                    .upload(`${Date.now()}_${projectImageFile.name}`, projectImageFile);
 
                 if (uploadError) {
                     console.error('Error uploading project image:', uploadError);
                     alert('Error uploading project image.');
                     return;
                 }
-
+                
                 const { data: { publicUrl } } = supabase.storage
                     .from('project-images')
-                    .getPublicUrl(projectImageFile.name);
+                    .getPublicUrl(uploadData.path);
                 imageUrl = publicUrl;
             }
 
             const { data, error } = await supabase
                 .from('projects')
-                .insert([{ title, description, technologies, imageUrl, link }]);
+                .insert([{ title, description, category, technologies, imageUrl, link }]);
 
             if (error) {
                 console.error('Error inserting project:', error);
+                alert('Error adding project.');
             } else {
-                projectForm.reset();
-                loadProjects();
+                form.reset();
+                loadProjects(); // Refresh the project list
             }
         });
-    }
 
-    // Display Projects
-    const projectsGallery = document.getElementById('projects-gallery');
+        // Function to initialize delete buttons for projects
+        function initializeDeleteButtons() {
+            projectsGallery.querySelectorAll('.delete-project-btn').forEach(button => {
+                // Prevent multiple listeners
+                if (button.dataset.listenerAttached) return;
+                button.dataset.listenerAttached = true;
 
-    async function loadProjects() {
-        if (projectsGallery) {
-            const { data: projects, error } = await supabase
-                .from('projects')
-                .select('*');
-
-            if (error) {
-                console.error('Error fetching projects:', error);
-                return;
-            }
-
-            projectsGallery.innerHTML = '';
-            projects.forEach(project => {
-                displayProject(project);
+                button.addEventListener('click', async (e) => {
+                    const projectId = e.currentTarget.dataset.id;
+                    if (confirm('Are you sure you want to delete this project?')) {
+                        const { error } = await supabase.from('projects').delete().eq('id', projectId);
+                        if (error) {
+                            console.error('Error deleting project:', error);
+                            alert('Error deleting project.');
+                        } else {
+                            loadProjects(); // Refresh list
+                        }
+                    }
+                });
             });
         }
-    }
 
-    function displayProject(project) {
-        const projectCard = `
-            <div class="project-card" data-aos="fade-up">
-                <img src="${project.imageUrl}" alt="${project.title}" loading="lazy">
-                <h3>${project.title}</h3>
-                <p>${project.description}</p>
-                <p><strong>Technologies:</strong> ${project.technologies}</p>
-                <a href="${project.link}" class="btn">View Project</a>
-                <button class="delete-project-btn" data-id="${project.id}">Delete</button>
-            </div>
-        `;
-        projectsGallery.innerHTML += projectCard;
-    }
-
-    if (projectsGallery) {
-        loadProjects();
-
-        // Event delegation for delete project buttons
-        projectsGallery.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('delete-project-btn')) {
-                const projectId = e.target.dataset.id;
-                const { error } = await supabase
-                    .from('projects')
-                    .delete()
-                    .eq('id', projectId);
-
-                if (error) {
-                    console.error('Error deleting project:', error);
-                } else {
-                    loadProjects();
-                }
-            }
-        });
-    }
-
-    // Contact Details
-    const contactDetailsContainer = document.getElementById('contact-details-container');
-    const addContactForm = document.getElementById('add-contact-form');
-
-    async function loadContactDetails() {
-        if (contactDetailsContainer) {
-            const { data: contacts, error } = await supabase
-                .from('contacts')
-                .select('*');
-
-            if (error) {
-                console.error('Error fetching contacts:', error);
-                return;
-            }
-
-            contactDetailsContainer.innerHTML = '';
-            contacts.forEach(contact => {
-                displayContact(contact);
-            });
-        }
-    }
-
-    function displayContact(contact) {
-        const contactCard = `
-            <div class="contact-card">
-                <h3>${contact.name}</h3>
-                <p><a href="mailto:${contact.email}">${contact.email}</a></p>
-                <p><a href="${contact.linkedin}" target="_blank">LinkedIn</a></p>
-                <p><a href="${contact.github}" target="_blank">GitHub</a></p>
-                <p>${contact.whatsapp}</p>
-                <p><a href="${contact.custom}" target="_blank">${contact.custom}</a></p>
-                <button class="delete-contact-btn" data-id="${contact.id}">Delete</button>
-            </div>
-        `;
-        contactDetailsContainer.innerHTML += contactCard;
-    }
-
-    if (contactDetailsContainer) {
-        loadContactDetails();
-
-        // Event delegation for delete contact buttons
-        contactDetailsContainer.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('delete-contact-btn')) {
-                const contactId = e.target.dataset.id;
-                const { error } = await supabase
-                    .from('contacts')
-                    .delete()
-                    .eq('id', contactId);
-
-                if (error) {
-                    console.error('Error deleting contact:', error);
-                } else {
-                    loadContactDetails();
-                }
-            }
-        });
-    }
-
-});
-
-/* --- BEGIN NEW JS ADDITIONS --- */
-
-document.addEventListener('DOMContentLoaded', () => {
-    // --- PROJECT PAGE LOGIC ---
-    const projectGrid = document.querySelector('.project-grid');
-    if (projectGrid) {
+        // --- Filtering and Searching ---
         const filterButtons = document.querySelectorAll('.project-filter-btn');
         const searchInput = document.getElementById('project-search-input');
-        const projectCards = document.querySelectorAll('.project-card');
 
-        // Filter logic
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                const filter = button.dataset.filter;
-                filterProjects(filter, searchInput.value);
-            });
-        });
-
-        // Search logic
-        searchInput.addEventListener('input', () => {
+        function filterAndSearchProjects() {
             const activeFilter = document.querySelector('.project-filter-btn.active').dataset.filter;
-            filterProjects(activeFilter, searchInput.value);
-        });
+            const searchTerm = searchInput.value.toLowerCase();
+            const allCards = projectsGallery.querySelectorAll('.project-card');
 
-        function filterProjects(category, searchTerm) {
-            const lowerCaseSearchTerm = searchTerm.toLowerCase();
-            projectCards.forEach(card => {
-                const cardCategory = card.dataset.category;
+            allCards.forEach(card => {
+                const cardCategory = card.dataset.category || 'web';
                 const cardTitle = card.dataset.title.toLowerCase();
                 const cardDescription = card.dataset.description.toLowerCase();
 
-                const categoryMatch = category === 'all' || cardCategory === category;
-                const searchMatch = cardTitle.includes(lowerCaseSearchTerm) || cardDescription.includes(lowerCaseSearchTerm);
+                const categoryMatch = activeFilter === 'all' || cardCategory.toLowerCase() === activeFilter.toLowerCase();
+                const searchMatch = cardTitle.includes(searchTerm) || cardDescription.includes(searchTerm);
 
                 if (categoryMatch && searchMatch) {
                     card.style.display = 'flex';
@@ -337,27 +168,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-    }
 
-    // --- PROJECT MODAL LOGIC ---
-    const modal = document.getElementById('project-modal');
-    if (modal) {
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterAndSearchProjects();
+            });
+        });
+        searchInput.addEventListener('input', filterAndSearchProjects);
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('project-modal');
         const modalBody = modal.querySelector('.project-modal-body');
         const closeModalBtn = document.getElementById('project-modal-close');
-        const triggerButtons = document.querySelectorAll('.project-modal-trigger');
 
         function openModal(card) {
             const image = card.querySelector('.project-card-image-container img').src;
             const title = card.querySelector('.project-card-title').textContent;
-            const description = card.querySelector('.project-card-description').textContent;
             const tags = card.querySelector('.project-card-tags').innerHTML;
+            const description = card.dataset.description; // Use full description
             const sourceLink = card.querySelector('.btn-primary').href;
 
             modalBody.innerHTML = `
                 <img src="${image}" alt="${title}">
                 <h2>${title}</h2>
                 <div class="project-card-tags" style="margin-bottom: 1.5rem;">${tags}</div>
-                <p>This is a more detailed description of the project. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
+                <p>${description}</p>
                 <a href="${sourceLink}" class="btn-primary" target="_blank">View Source <i class="ri-arrow-right-up-line"></i></a>
             `;
             modal.classList.add('active');
@@ -369,65 +206,119 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = '';
         }
 
-        triggerButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const card = e.target.closest('.project-card');
-                openModal(card);
+        function initializeModalTriggers() {
+            projectsGallery.querySelectorAll('.project-modal-trigger').forEach(button => {
+                if (button.dataset.listenerAttached) return;
+                button.dataset.listenerAttached = true;
+                button.addEventListener('click', (e) => {
+                    const card = e.target.closest('.project-card');
+                    openModal(card);
+                });
             });
-        });
+        }
 
         closeModalBtn.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModal();
-            }
-        });
+        // Initial load
+        loadProjects();
     }
 
+
     // --- CONTACT PAGE LOGIC ---
-    const contactForm = document.getElementById('premium-contact-form');
-    if (contactForm) {
-        const successMessage = document.getElementById('form-success-message');
+    const contactPage = document.getElementById('contact-details-container');
+    if (contactPage) {
+        console.log('Contact page detected. Initializing contact scripts.');
+        const contactDetailsContainer = document.getElementById('contact-details-container');
+        const addContactForm = document.getElementById('add-contact-form');
 
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+        // Function to display a single contact using the new card design
+        function displayContact(contact) {
+            let contactCardHTML = '<div class="contact-info-card" data-aos="fade-up">';
             
-            // Basic validation
-            const name = contactForm.querySelector('#name').value;
-            const email = contactForm.querySelector('#email').value;
-            const message = contactForm.querySelector('#message').value;
+            // Delete Button
+            contactCardHTML += `<button class="delete-contact-btn" data-id="${contact.id}"><i class="ri-delete-bin-line"></i></button>`;
 
-            if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
-                alert('Please fill out all fields.');
+            // Email
+            if(contact.email) {
+                contactCardHTML += `
+                    <div class="contact-info-icon"><i class="ri-mail-send-line"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">${contact.name || 'Email'}</h3>
+                        <a href="mailto:${contact.email}" class="contact-info-link">${contact.email}</a>
+                    </div>`;
+            }
+            // You can add more specific icons for LinkedIn, GitHub etc.
+            else if(contact.linkedin) {
+                 contactCardHTML += `
+                    <div class="contact-info-icon"><i class="ri-linkedin-box-fill"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">${contact.name}</h3>
+                        <a href="${contact.linkedin}" target="_blank" class="contact-info-link">View LinkedIn</a>
+                    </div>`;
+            }
+            // Add other conditions for github, whatsapp etc.
+
+            contactCardHTML += '</div>';
+            contactDetailsContainer.innerHTML += contactCardHTML;
+        }
+
+        // Function to fetch and load all contacts
+        async function loadContactDetails() {
+            const { data: contacts, error } = await supabase.from('contacts').select('*');
+            if (error) {
+                console.error('Error fetching contacts:', error);
                 return;
             }
+            contactDetailsContainer.innerHTML = '';
+            contacts.forEach(displayContact);
+            initializeContactDeleteButtons();
+        }
 
-            // On success
-            contactForm.style.display = 'none';
-            successMessage.style.display = 'block';
+        // Function to handle adding a new contact
+        addContactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const contactData = {
+                name: form['contact-name'].value,
+                email: form['contact-email'].value,
+                linkedin: form['contact-linkedin'].value,
+                github: form['contact-github'].value,
+                whatsapp: form['contact-whatsapp'].value,
+                custom: form['contact-custom'].value,
+            };
 
-            // Here you would typically send the form data to a server or service like Supabase
-            // For example:
-            /*
-            supabase.from('messages').insert([
-                { name: name, email: email, message: message }
-            ]).then(response => {
-                if (response.error) {
-                    console.error('Error sending message:', response.error);
-                    alert('Sorry, there was an error sending your message.');
-                    contactForm.style.display = 'flex';
-                    successMessage.style.display = 'none';
-                } else {
-                    console.log('Message sent successfully!');
-                }
-            });
-            */
+            const { error } = await supabase.from('contacts').insert([contactData]);
+            if (error) {
+                console.error('Error inserting contact:', error);
+                alert('Error adding contact.');
+            } else {
+                form.reset();
+                loadContactDetails();
+            }
         });
+
+        // Function to initialize delete buttons for contacts
+        function initializeContactDeleteButtons() {
+            contactDetailsContainer.querySelectorAll('.delete-contact-btn').forEach(button => {
+                if (button.dataset.listenerAttached) return;
+                button.dataset.listenerAttached = true;
+                button.addEventListener('click', async (e) => {
+                    const contactId = e.currentTarget.dataset.id;
+                    if (confirm('Are you sure you want to delete this contact?')) {
+                        const { error } = await supabase.from('contacts').delete().eq('id', contactId);
+                        if (error) {
+                            console.error('Error deleting contact:', error);
+                        } else {
+                            loadContactDetails();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initial load
+        loadContactDetails();
     }
 });

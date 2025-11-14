@@ -25,16 +25,17 @@
         <!-- HERO SECTION -->
         <section class="premium-hero" data-aos="fade-in">
             <h1 class="premium-h1">Work</h1>
-            <p class="premium-p">A selection of projects that I'm proud of. I've worked on a variety of projects, from web applications to design systems and security research.</p>
+            <p class="premium-p">This page highlights my personal and academic projects. Each project represents growth in design, programming, and creativity. I continuously update this section with new ideas and experiments.</p>
         </section>
 
         <!-- CONTROLS -->
         <section class="project-controls-container" data-aos="fade-up">
             <div class="project-filters">
                 <button class="project-filter-btn active" data-filter="all">All</button>
-                <button class="project-filter-btn" data-filter="web">Web</button>
-                <button class="project-filter-btn" data-filter="design">Design</button>
-                <button class="project-filter-btn" data-filter="security">Security</button>
+                <button class="project-filter-btn" data-filter="Web">Web</button>
+                <button class="project-filter-btn" data-filter="AI">AI</button>
+                <button class="project-filter-btn" data-filter="PHP">PHP</button>
+                <button class="project-filter-btn" data-filter="Firebase">Firebase</button>
             </div>
             <div class="project-search">
                 <i class="ri-search-line"></i>
@@ -42,84 +43,53 @@
             </div>
         </section>
 
-        <!-- PROJECTS GRID -->
-        <section class="project-grid" data-aos="fade-up" data-aos-delay="200">
-            <!-- Project Card 1 -->
-            <div class="project-card" data-category="web" data-title="E-commerce Platform" data-description="A full-stack e-commerce solution with a custom CMS and payment integration.">
-                <div class="project-card-image-container">
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" alt="E-commerce Platform">
-                </div>
-                <div class="project-card-content">
-                    <div class="project-card-tags">
-                        <span class="project-card-tag">React</span>
-                        <span class="project-card-tag">Node.js</span>
-                        <span class="project-card-tag">PostgreSQL</span>
-                    </div>
-                    <h3 class="project-card-title">E-commerce Platform</h3>
-                    <p class="project-card-description">A full-stack e-commerce solution with a custom CMS and payment integration.</p>
-                    <div class="project-card-buttons">
-                        <button class="btn-secondary project-modal-trigger">View Details</button>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
-                    </div>
-                </div>
-            </div>
+        <!-- PROJECTS GRID - Content is loaded dynamically by script.js -->
+        <section id="projects-gallery" class="project-grid" data-aos="fade-up" data-aos-delay="200">
+            <!-- Project cards will be injected here by Supabase logic -->
+        </section>
 
-            <!-- Project Card 2 -->
-            <div class="project-card" data-category="design" data-title="Design System UI Kit" data-description="A comprehensive UI kit and design system built in Figma and implemented in Storybook.">
-                <div class="project-card-image-container">
-                    <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop" alt="Design System UI Kit">
-                </div>
-                <div class="project-card-content">
-                    <div class="project-card-tags">
-                        <span class="project-card-tag">Figma</span>
-                        <span class="project-card-tag">Storybook</span>
-                        <span class="project-card-tag">CSS-in-JS</span>
+        <!-- UPLOAD PROJECT FORM -->
+        <section class="premium-hero" data-aos="fade-up">
+             <h2 class="premium-h1" style="font-size: 2.5rem;">Upload Project</h2>
+        </section>
+        
+        <section class="contact-layout" data-aos="fade-up">
+            <div class="contact-form-container">
+                <form id="project-form" class="premium-form">
+                    <div class="form-group">
+                        <label for="project-title">Project Title</label>
+                        <input type="text" id="project-title" name="project-title" required>
                     </div>
-                    <h3 class="project-card-title">Design System UI Kit</h3>
-                    <p class="project-card-description">A comprehensive UI kit and design system built in Figma and implemented in Storybook.</p>
-                    <div class="project-card-buttons">
-                        <button class="btn-secondary project-modal-trigger">View Details</button>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                    <div class="form-group">
+                        <label for="project-description">Short Description</label>
+                        <textarea id="project-description" name="project-description" rows="4" required></textarea>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="project-category">Category</label>
+                        <input type="text" id="project-category" name="project-category" placeholder="e.g., Web, AI, PHP" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-technologies">Technologies Used</label>
+                        <input type="text" id="project-technologies" name="project-technologies" placeholder="e.g., React, Node.js, Figma" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-image">Project Image</label>
+                        <input type="file" id="project-image" name="project-image" accept="image/*" class="form-control-file" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="project-link">Source Link</label>
+                        <input type="text" id="project-link" name="project-link" placeholder="https://github.com/user/repo" required>
+                    </div>
+                    <button type="submit" class="btn-primary form-submit-btn">Submit Project</button>
+                </form>
             </div>
-
-            <!-- Project Card 3 -->
-            <div class="project-card" data-category="security" data-title="Auth Service" data-description="A secure authentication and authorization service using JWT and OAuth2.">
-                 <div class="project-card-image-container">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop" alt="Auth Service">
-                </div>
-                <div class="project-card-content">
-                    <div class="project-card-tags">
-                        <span class="project-card-tag">Go</span>
-                        <span class="project-card-tag">JWT</span>
-                        <span class="project-card-tag">OAuth2</span>
-                    </div>
-                    <h3 class="project-card-title">Auth Service</h3>
-                    <p class="project-card-description">A secure authentication and authorization service using JWT and OAuth2.</p>
-                    <div class="project-card-buttons">
-                        <button class="btn-secondary project-modal-trigger">View Details</button>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Project Card 4 -->
-            <div class="project-card" data-category="web" data-title="Portfolio Website" data-description="My personal corner of the internet, designed and built by me.">
-                 <div class="project-card-image-container">
-                    <img src="https://images.unsplash.com/photo-1517694712202-1428bc648c73?q=80&w=2070&auto=format&fit=crop" alt="Portfolio Website">
-                </div>
-                <div class="project-card-content">
-                    <div class="project-card-tags">
-                        <span class="project-card-tag">HTML</span>
-                        <span class="project-card-tag">CSS</span>
-                        <span class="project-card-tag">JavaScript</span>
-                    </div>
-                    <h3 class="project-card-title">Portfolio Website</h3>
-                    <p class="project-card-description">My personal corner of the internet, designed and built by me.</p>
-                    <div class="project-card-buttons">
-                        <button class="btn-secondary project-modal-trigger">View Details</button>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+            <div class="contact-info-container">
+                <!-- This column can be empty or have some instructions -->
+                 <div class="contact-info-card">
+                    <div class="contact-info-icon"><i class="ri-information-line"></i></div>
+                    <div class="contact-info-text">
+                        <h3 class="contact-info-title">Instructions</h3>
+                        <p class="contact-info-link" style="white-space: normal;">Fill out the form to add a new project to the gallery. Please provide a direct URL for the image (e.g., from a service like Imgur).</p>
                     </div>
                 </div>
             </div>

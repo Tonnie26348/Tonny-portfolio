@@ -24,66 +24,47 @@
     <main class="premium-container">
         <!-- HERO SECTION -->
         <section class="premium-hero" data-aos="fade-in">
-            <h1 class="premium-h1">Get in Touch</h1>
-            <p class="premium-p">Have a project in mind, a question, or just want to say hello? I’d love to hear from you. Fill out the form below or use one of the contact methods to reach out.</p>
+            <h1 class="premium-h1">Let's Connect</h1>
+            <p class="premium-p">I’m always open to new ideas and collaborations. Feel free to add your contact information to be displayed on this page, or reach out via one of the existing methods.</p>
         </section>
 
         <!-- CONTACT LAYOUT -->
         <section class="contact-layout" data-aos="fade-up" data-aos-delay="200">
             <!-- Left Column: Form -->
             <div class="contact-form-container">
-                <form id="premium-contact-form" class="premium-form">
+                <h2 class="premium-h1" style="font-size: 2rem; text-align: left; margin-bottom: 2rem;">Add Your Contact</h2>
+                <form id="add-contact-form" class="premium-form">
                     <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        <label for="contact-name">Name</label>
+                        <input type="text" id="contact-name" name="contact-name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                        <label for="contact-email">Email Address</label>
+                        <input type="email" id="contact-email" name="contact-email" required>
                     </div>
                     <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="6" placeholder="How can I help you?" required></textarea>
+                        <label for="contact-linkedin">LinkedIn Profile URL</label>
+                        <input type="text" id="contact-linkedin" name="contact-linkedin">
                     </div>
-                    <button type="submit" class="btn-primary form-submit-btn">Send Message</button>
+                    <div class="form-group">
+                        <label for="contact-github">GitHub Profile URL</label>
+                        <input type="text" id="contact-github" name="contact-github">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-whatsapp">WhatsApp Number</label>
+                        <input type="text" id="contact-whatsapp" name="contact-whatsapp">
+                    </div>
+                     <div class="form-group">
+                        <label for="contact-custom">Custom Link</label>
+                        <input type="text" id="contact-custom" name="contact-custom">
+                    </div>
+                    <button type="submit" class="btn-primary form-submit-btn">Add Contact</button>
                 </form>
-                <div id="form-success-message" class="form-success-message" style="display: none;">
-                    <i class="ri-checkbox-circle-fill"></i>
-                    <h3>Message Sent!</h3>
-                    <p>Thanks for reaching out. I'll get back to you as soon as possible.</p>
-                </div>
             </div>
 
-            <!-- Right Column: Info Cards -->
-            <div class="contact-info-container">
-                <div class="contact-info-card">
-                    <div class="contact-info-icon"><i class="ri-mail-send-line"></i></div>
-                    <div class="contact-info-text">
-                        <h3 class="contact-info-title">Email</h3>
-                        <a href="mailto:tonnymutea@gmail.com" class="contact-info-link">tonnymutea@gmail.com</a>
-                    </div>
-                </div>
-                <div class="contact-info-card">
-                    <div class="contact-info-icon"><i class="ri-map-pin-line"></i></div>
-                    <div class="contact-info-text">
-                        <h3 class="contact-info-title">Location</h3>
-                        <p class="contact-info-link">Nairobi, Kenya</p>
-                    </div>
-                </div>
-                <div class="contact-info-card">
-                    <div class="contact-info-icon"><i class="ri-github-fill"></i></div>
-                    <div class="contact-info-text">
-                        <h3 class="contact-info-title">GitHub</h3>
-                        <a href="https://github.com/tonnie26348" target="_blank" class="contact-info-link">@tonnie26348</a>
-                    </div>
-                </div>
-                <div class="contact-info-card">
-                    <div class="contact-info-icon"><i class="ri-linkedin-box-fill"></i></div>
-                    <div class="contact-info-text">
-                        <h3 class="contact-info-title">LinkedIn</h3>
-                        <a href="https://www.linkedin.com/in/tonny-mutea-a6a39a250/" target="_blank" class="contact-info-link">Tonny Mutea</a>
-                    </div>
-                </div>
+            <!-- Right Column: Info Cards - Content is loaded dynamically by script.js -->
+            <div id="contact-details-container" class="contact-info-container">
+                <!-- Contact cards will be injected here by Supabase logic -->
             </div>
         </section>
     </main>
