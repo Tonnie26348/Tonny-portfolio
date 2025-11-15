@@ -22,22 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- PROFILE PHOTO MANAGEMENT (WORKAROUND) ---
-    const profileImage = document.getElementById('profile-image');
+    // --- PROFILE PHOTO MANAGEMENT (WORKAROUND - Buttons only) ---
     const uploadButton = document.getElementById('upload-button');
     const deleteButton = document.getElementById('delete-button');
-
-    function loadProfilePhotoWorkaround() {
-        if (!profileImage) {
-            console.error('ERROR: profileImage element not found!'); // New debug log
-            return;
-        }
-        console.log('DEBUG: profileImage element found:', profileImage); // New debug log
-        // Temporarily hardcode the image URL to bypass the Supabase RLS issue.
-        const imageUrl = 'https://images.unsplash.com/photo-1564532790790-91621141211a?q=80&w=1974&auto=format&fit=crop';
-        profileImage.src = imageUrl;
-        console.log('Profile image hardcoded as a temporary workaround. New src:', profileImage.src); // New debug log
-    }
 
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
@@ -51,9 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Initial load for profile photo using the workaround
-    loadProfilePhotoWorkaround();
-
 
     // --- PROJECT PAGE LOGIC ---
     const projectPageContainer = document.querySelector('.project-grid');
