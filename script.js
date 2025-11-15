@@ -22,100 +22,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- PROFILE PHOTO MANAGEMENT ---
+    // --- PROFILE PHOTO MANAGEMENT (WORKAROUND) ---
     const profileImage = document.getElementById('profile-image');
     const uploadButton = document.getElementById('upload-button');
     const deleteButton = document.getElementById('delete-button');
 
-    async function loadProfilePhoto() {
+    function loadProfilePhotoWorkaround() {
         if (!profileImage) return;
-        const { data, error } = await supabase.from('profile').select('photo_url').single();
-        if (data && data.photo_url) {
-            profileImage.src = data.photo_url;
-        } else {
-            // If no URL, use a default or hide it
-            profileImage.src = 'https://images.unsplash.com/photo-1564532790790-91621141211a?q=80&w=1974&auto=format&fit=crop'; // Default image
-            if (error) console.error('Error fetching profile photo:', error.message);
-        }
+        // Temporarily hardcode the image URL to bypass the Supabase RLS issue.
+        const imageUrl = 'https://images.unsplash.com/photo-1564532790790-91621141211a?q=80&w=1974&auto=format&fit=crop';
+        profileImage.src = imageUrl;
+        console.log('Profile image hardcoded as a temporary workaround.');
     }
 
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            fileInput.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (!file) {
-                    alert('No file selected.');
-                    return;
-                }
-
-                // 1. Upload to Supabase Storage
-                const filePath = `public/${Date.now()}_${file.name}`;
-                const { error: uploadError } = await supabase.storage
-                    .from('profile-photos')
-                    .upload(filePath, file, { upsert: true });
-
-                if (uploadError) {
-                    console.error('Storage Upload Error:', uploadError);
-                    alert(`Storage Error: ${uploadError.message}`);
-                    return;
-                }
-
-                // 2. Get Public URL
-                const { data: urlData } = supabase.storage
-                    .from('profile-photos')
-                    .getPublicUrl(filePath);
-
-                if (!urlData || !urlData.publicUrl) {
-                    alert('Error: Could not get public URL for the uploaded image.');
-                    return;
-                }
-                const publicUrl = urlData.publicUrl;
-
-                // 3. Update Database
-                const { error: dbError } = await supabase
-                    .from('profile')
-                    .update({ photo_url: publicUrl })
-                    .eq('id', 1); // Assuming a single user profile with id 1
-
-                if (dbError) {
-                    console.error('Database Update Error:', dbError);
-                    alert(`Database Error: ${dbError.message}`);
-                    return;
-                }
-
-                alert('Profile photo uploaded successfully!');
-                loadProfilePhoto(); // Refresh the image on the page
-            };
-            fileInput.click();
+            alert('Upload functionality is temporarily disabled due to a Supabase security policy issue.');
         });
     }
 
     if (deleteButton) {
-        deleteButton.addEventListener('click', async () => {
-            if (!confirm('Are you sure you want to delete your profile photo?')) return;
-
-            // For simplicity, we'll just nullify the URL in the database.
-            // A complete solution would also delete the file from storage.
-            const { error } = await supabase
-                .from('profile')
-                .update({ photo_url: null })
-                .eq('id', 1);
-
-            if (error) {
-                console.error('Error deleting photo URL:', error);
-                alert(`Database Error: ${error.message}`);
-            } else {
-                alert('Profile photo deleted successfully!');
-                loadProfilePhoto();
-            }
+        deleteButton.addEventListener('click', () => {
+            alert('Delete functionality is temporarily disabled due to a Supabase security policy issue.');
         });
     }
     
-    // Initial load for profile photo
-    loadProfilePhoto();
+    // Initial load for profile photo using the workaround
+    loadProfilePhotoWorkaround();
 
 
     // --- PROJECT PAGE LOGIC ---
