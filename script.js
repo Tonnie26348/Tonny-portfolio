@@ -28,11 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteButton = document.getElementById('delete-button');
 
     function loadProfilePhotoWorkaround() {
-        if (!profileImage) return;
+        if (!profileImage) {
+            console.error('ERROR: profileImage element not found!'); // New debug log
+            return;
+        }
+        console.log('DEBUG: profileImage element found:', profileImage); // New debug log
         // Temporarily hardcode the image URL to bypass the Supabase RLS issue.
         const imageUrl = 'https://images.unsplash.com/photo-1564532790790-91621141211a?q=80&w=1974&auto=format&fit=crop';
         profileImage.src = imageUrl;
-        console.log('Profile image hardcoded as a temporary workaround.');
+        console.log('Profile image hardcoded as a temporary workaround. New src:', profileImage.src); // New debug log
     }
 
     if (uploadButton) {
