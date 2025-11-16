@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Supabase Storage Test</title>
+</head>
+<body>
+    <h1>Supabase Bucket List</h1>
+    <p>This page will list all storage buckets visible to your API key.</p>
+    <pre id="output"></pre>
+
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+        const supabaseUrl = 'https://jkqqdntirbseovqctmrg.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprcXFkbnRpcmJzZW92cWN0bXJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyNDQ0MjcsImV4cCI6MjA3ODgyMDQyN30.0TzvcSsu_gTqKpUjd2cLPLgn8-uUEIAyefStlRcuuQQ';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        async function listBuckets() {
+            const outputElement = document.getElementById('output');
+            outputElement.textContent = 'Fetching buckets...';
+
+            const { data, error } = await supabase.storage.listBuckets();
+
+            if (error) {
+                outputElement.textContent = 'Error fetching buckets:\n' + JSON.stringify(error, null, 2);
+                return;
+            }
+
+            if (data.length === 0) {
+                outputElement.textContent = 'No buckets found.';
+                return;
+            }
+
+            outputElement.textContent = 'Buckets found:\n' + JSON.stringify(data, null, 2);
+        }
+
+        listBuckets();
+    </script>
+</body>
+</html>
