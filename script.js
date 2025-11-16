@@ -1,7 +1,4 @@
-// --- SUPABASE CLIENT SETUP ---
-const supabaseUrl = 'https://jkqqdntirbseovqctmrg.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprcXFkbnRpcmJzZW92cWN0bXJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyNDQ0MjcsImV4cCI6MjA3ODgyMDQyN30.0TzvcSsu_gTqKpUjd2cLPLgn8-uUEIAyefStlRcuuQQ';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+import { supabase } from './supabase_client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed. Initializing scripts.');
@@ -29,12 +26,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadProfilePhoto() {
         if (!profileImage) return;
+
+        // Try to get the public URL for the fixed profile.jpg
+        const { data: publicUrlData } = supabase.storage
+            .from('profile-photos')
+            .getPublicUrl('profile.jpg');
+
+        if (publicUrlData && publicUrlData.publicUrl) {
+            // Check if the file actually exists by trying to fetch it
+            try {
+                const response = await fetch(publicUrlData.publicUrl);
+                if (response.ok) {
+                    profileImage.src = publicUrlData.publicUrl;
+                    return;
+                }
+            } catch (e) {
+                console.warn('Could not fetch profile image from storage, likely not found:', e);
+            }
+        }
+
+        // Fallback to database entry if storage fails or is empty
         const { data, error } = await supabase.from('profile').select('photo_url').single();
         if (data && data.photo_url) {
             profileImage.src = data.photo_url;
         } else {
-            // If no URL, you can set a default or leave the original src
-            if (error) console.error('Error fetching profile photo:', error.message);
+            // If no URL, set to a default or leave the original src
+            profileImage.src = 'profile.jpg'; // Assuming 'profile.jpg' is your default placeholder
+            if (error) console.error('Error fetching profile photo URL from DB:', error.message);
         }
     }
 
@@ -50,11 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 1. Upload to Supabase Storage
-                const filePath = `public/${Date.now()}_${file.name}`;
+                const filePath = `profile.jpg`; // Use a fixed filename
+
+                // 1. Upload to Supabase Storage (will overwrite if file exists)
                 const { error: uploadError } = await supabase.storage
                     .from('profile-photos')
-                    .upload(filePath, file, { upsert: true });
+                    .upload(filePath, file, {
+                        cacheControl: '3600',
+                        upsert: true // This will overwrite existing file
+                    });
 
                 if (uploadError) {
                     console.error('Storage Upload Error:', uploadError);
@@ -92,26 +114,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (deleteButton) {
-        deleteButton.addEventListener('click', async () => {
-            if (!confirm('Are you sure you want to delete your profile photo?')) return;
-
-            const { error } = await supabase
-                .from('profile')
-                .update({ photo_url: null })
-                .eq('id', 1);
-
-            if (error) {
-                console.error('Error deleting photo URL:', error);
-                alert(`Database Error: ${error.message}`);
-            } else {
-                alert('Profile photo deleted successfully!');
-                // Set to default or clear
-                profileImage.src = 'profile.jpg'; 
-            }
-        });
-    }
+        if (deleteButton) {
+            deleteButton.addEventListener('click', async () => {
+                if (!confirm('Are you sure you want to delete your profile photo?')) return;
     
+                // 1. Delete from Supabase Storage
+                const { error: storageError } = await supabase.storage
+                    .from('profile-photos')
+                    .remove(['profile.jpg']); // Fixed filename
+    
+                if (storageError && storageError.statusCode !== '404') { // Ignore 404 if file doesn't exist
+                    console.error('Storage Delete Error:', storageError);
+                    alert(`Storage Error: ${storageError.message}`);
+                    return;
+                }
+    
+                // 2. Update Database
+                const { error: dbError } = await supabase
+                    .from('profile')
+                    .update({ photo_url: null })
+                    .eq('id', 1);
+    
+                if (dbError) {
+                    console.error('Database Update Error:', dbError);
+                    alert(`Database Error: ${dbError.message}`);
+                    return;
+                }
+    
+                alert('Profile photo deleted successfully!');
+                profileImage.src = 'profile.jpg'; // Set to a default placeholder or original image
+            });
+        }    
     // Initial load for profile photo
     if (profileImage) {
         loadProfilePhoto();
@@ -198,11 +231,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.addEventListener('click', async (e) => {
                     const projectId = e.currentTarget.dataset.id;
                     if (confirm('Are you sure you want to delete this project?')) {
-                        const { error } = await supabase.from('projects').delete().eq('id', projectId);
-                        if (error) {
-                            console.error('Error deleting project:', error);
-                            alert('Error deleting project.');
+                        // 1. Get the project's image URL from the database
+                        const { data: project, error: fetchError } = await supabase
+                            .from('projects')
+                            .select('imageUrl')
+                            .eq('id', projectId)
+                            .single();
+
+                        if (fetchError) {
+                            console.error('Error fetching project for deletion:', fetchError);
+                            alert('Error fetching project details before deletion.');
+                            return;
+                        }
+
+                        // 2. Delete the image from storage if it exists
+                        if (project && project.imageUrl) {
+                            const imageUrl = project.imageUrl;
+                            const filePath = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+                            const { error: storageError } = await supabase.storage
+                                .from('project-images')
+                                .remove([filePath]);
+
+                            if (storageError && storageError.statusCode !== '404') {
+                                console.error('Error deleting project image:', storageError);
+                                alert('Error deleting project image from storage.');
+                                // Decide if you want to proceed with DB deletion even if storage fails
+                            }
+                        }
+
+                        // 3. Delete the project from the database
+                        const { error: dbError } = await supabase.from('projects').delete().eq('id', projectId);
+                        if (dbError) {
+                            console.error('Error deleting project from DB:', dbError);
+                            alert('Error deleting project from database.');
                         } else {
+                            alert('Project deleted successfully!');
                             loadUploadedProjects();
                         }
                     }
