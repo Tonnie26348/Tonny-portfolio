@@ -1,4 +1,9 @@
-import { supabase } from './supabase_client.js';
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+// --- SUPABASE CLIENT SETUP ---
+const supabaseUrl = 'https://jkqqdntirbseovqctmrg.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprcXFkbnRpcmJzZW92cWN0bXJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyNDQ0MjcsImV4cCI6MjA3ODgyMDQyN30.0TzvcSsu_gTqKpUjd2cLPLgn8-uUEIAyefStlRcuuQQ';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed. Initializing scripts.');
@@ -27,32 +32,23 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadProfilePhoto() {
         if (!profileImage) return;
 
-        // Try to get the public URL for the fixed profile.jpg
-        const { data: publicUrlData } = supabase.storage
-            .from('profile-photos')
-            .getPublicUrl('profile.jpg');
+        const { data, error } = await supabase
+            .from('profile')
+            .select('photo_url')
+            .eq('id', 1)
+            .single();
 
-        if (publicUrlData && publicUrlData.publicUrl) {
-            // Check if the file actually exists by trying to fetch it
-            try {
-                const response = await fetch(publicUrlData.publicUrl);
-                if (response.ok) {
-                    profileImage.src = publicUrlData.publicUrl;
-                    return;
-                }
-            } catch (e) {
-                console.warn('Could not fetch profile image from storage, likely not found:', e);
-            }
+        if (error) {
+            console.error('Error fetching profile photo:', error);
+            profileImage.src = 'profile.jpg'; // Fallback to default
+            return;
         }
 
-        // Fallback to database entry if storage fails or is empty
-        const { data, error } = await supabase.from('profile').select('photo_url').single();
         if (data && data.photo_url) {
-            profileImage.src = data.photo_url;
+            // Add a timestamp to the URL to prevent caching issues
+            profileImage.src = data.photo_url + '?t=' + new Date().getTime();
         } else {
-            // If no URL, set to a default or leave the original src
-            profileImage.src = 'profile.jpg'; // Assuming 'profile.jpg' is your default placeholder
-            if (error) console.error('Error fetching profile photo URL from DB:', error.message);
+            profileImage.src = 'profile.jpg'; // Default placeholder
         }
     }
 
@@ -70,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const filePath = `profile.jpg`; // Use a fixed filename
 
-                // 1. Upload to Supabase Storage (will overwrite if file exists)
+                // 1. Upload to Supabase Storage (overwrite if file exists)
                 const { error: uploadError } = await supabase.storage
                     .from('profile-photos')
                     .upload(filePath, file, {
@@ -99,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const { error: dbError } = await supabase
                     .from('profile')
                     .update({ photo_url: publicUrl })
-                    .eq('id', 1); // Assuming a single user profile with id 1
+                    .eq('id', 1);
 
                 if (dbError) {
                     console.error('Database Update Error:', dbError);
@@ -114,37 +110,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-        if (deleteButton) {
-            deleteButton.addEventListener('click', async () => {
-                if (!confirm('Are you sure you want to delete your profile photo?')) return;
-    
-                // 1. Delete from Supabase Storage
-                const { error: storageError } = await supabase.storage
-                    .from('profile-photos')
-                    .remove(['profile.jpg']); // Fixed filename
-    
-                if (storageError && storageError.statusCode !== '404') { // Ignore 404 if file doesn't exist
-                    console.error('Storage Delete Error:', storageError);
-                    alert(`Storage Error: ${storageError.message}`);
-                    return;
-                }
-    
-                // 2. Update Database
-                const { error: dbError } = await supabase
-                    .from('profile')
-                    .update({ photo_url: null })
-                    .eq('id', 1);
-    
-                if (dbError) {
-                    console.error('Database Update Error:', dbError);
-                    alert(`Database Error: ${dbError.message}`);
-                    return;
-                }
-    
-                alert('Profile photo deleted successfully!');
-                profileImage.src = 'profile.jpg'; // Set to a default placeholder or original image
-            });
-        }    
+    if (deleteButton) {
+        deleteButton.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to delete your profile photo?')) return;
+
+            // 1. Delete from Supabase Storage
+            const { error: storageError } = await supabase.storage
+                .from('profile-photos')
+                .remove(['profile.jpg']); // Fixed filename
+
+            if (storageError && storageError.statusCode !== '404') { // Ignore 404 if file doesn't exist
+                console.error('Storage Delete Error:', storageError);
+                alert(`Storage Error: ${storageError.message}`);
+                return;
+            }
+
+            // 2. Update Database
+            const { error: dbError } = await supabase
+                .from('profile')
+                .update({ photo_url: null })
+                .eq('id', 1);
+
+            if (dbError) {
+                console.error('Database Update Error:', dbError);
+                alert(`Database Error: ${dbError.message}`);
+                return;
+            }
+
+            alert('Profile photo deleted successfully!');
+            profileImage.src = 'profile.jpg'; // Set to a default placeholder
+        });
+    }
+
     // Initial load for profile photo
     if (profileImage) {
         loadProfilePhoto();
@@ -160,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const projectForm = document.getElementById('project-form');
 
         function displayProject(project, targetElement) {
-            const imageUrl = project.imageUrl || 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop';
+            const imageUrl = project.image_url || 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2070&auto=format&fit=crop';
             const projectCard = `
                 <div class="project-card" data-category="${project.category || 'Web Application'}" data-title="${project.title}" data-description="${project.description}" data-aos="fade-up">
                     <div class="project-card-image-container"><img src="${imageUrl}" alt="${project.title}"></div>
@@ -169,8 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3 class="project-card-title">${project.title}</h3>
                         <p class="project-card-description">${project.description}</p>
                         <div class="project-card-buttons">
-                            ${project.liveUrl ? `<a href="${project.liveUrl}" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>` : ''}
-                            <a href="${project.link}" target="_blank" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                            ${project.project_url ? `<a href="${project.project_url}" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>` : ''}
+                            <a href="${project.source_code_url}" target="_blank" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
                             ${targetElement === uploadedProjectsGallery ? `<button class="delete-project-btn" data-id="${project.id}"><i class="ri-delete-bin-line"></i></button>` : ''}
                         </div>
                     </div>
@@ -199,8 +196,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const category = form['project-category'].value;
                 const technologies = form['project-technologies'].value;
                 const projectImageFile = form['project-image'].files[0];
-                const link = form['project-link'].value;
-                let imageUrl = '';
+                const source_code_url = form['project-link'].value;
+                const project_url = form['project-url'].value;
+                let image_url = '';
                 if (projectImageFile) {
                     const { data: uploadData, error: uploadError } = await supabase.storage.from('project-images').upload(`${Date.now()}_${projectImageFile.name}`, projectImageFile);
                     if (uploadError) {
@@ -209,9 +207,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                     const { data: { publicUrl } } = supabase.storage.from('project-images').getPublicUrl(uploadData.path);
-                    imageUrl = publicUrl;
+                    image_url = publicUrl;
                 }
-                const { data, error } = await supabase.from('projects').insert([{ title, description, category, technologies, imageUrl, link, liveUrl: '' }]);
+                const { data, error } = await supabase.from('projects').insert([{ title, description, category, technologies, image_url, source_code_url, project_url }]);
                 if (error) {
                     console.error('Error inserting project:', error);
                     alert('Error adding project.');
@@ -234,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 1. Get the project's image URL from the database
                         const { data: project, error: fetchError } = await supabase
                             .from('projects')
-                            .select('imageUrl')
+                            .select('image_url')
                             .eq('id', projectId)
                             .single();
 
@@ -245,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                         // 2. Delete the image from storage if it exists
-                        if (project && project.imageUrl) {
-                            const imageUrl = project.imageUrl;
+                        if (project && project.image_url) {
+                            const imageUrl = project.image_url;
                             const filePath = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
                             const { error: storageError } = await supabase.storage
                                 .from('project-images')
