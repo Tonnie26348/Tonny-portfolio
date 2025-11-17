@@ -218,7 +218,7 @@ body.dark-mode .profile-photo-fallback {
     font-family: var(--premium-font);
     font-size: 1.2rem;
     font-weight: 500;
-    color: var(--premium-brand-color);
+    color: #FFC107; /* Premium Gold */
     letter-spacing: 0.5px;
     margin-bottom: 1.5rem;
     text-transform: uppercase;
