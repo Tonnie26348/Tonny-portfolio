@@ -215,8 +215,13 @@ body.dark-mode .profile-photo-fallback {
 }
 
 .subheading {
-    font-size: 1.5rem;
-    color: #888;
+    font-family: var(--premium-font);
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--premium-brand-color);
+    letter-spacing: 0.5px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
 }
 
 .btn {
