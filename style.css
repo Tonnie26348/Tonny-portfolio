@@ -12,6 +12,18 @@ body.dark-mode {
     color: #fff;
 }
 
+p {
+    font-family: var(--premium-font);
+    font-size: 1.1rem; /* Slightly smaller than premium-p for general text */
+    line-height: 1.7;
+    margin-bottom: 1rem; /* Consistent spacing */
+    color: var(--premium-text-light); /* Default text color */
+}
+
+body.dark-mode p {
+    color: var(--premium-text-dark);
+}
+
 header {
     background-color: #333;
     color: #fff;
