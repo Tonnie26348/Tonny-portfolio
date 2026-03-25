@@ -21,31 +21,24 @@
         <button id="dark-mode-toggle">Dark Mode</button>
     </header>
 
-    <main class="premium-container">
-        <!-- HERO SECTION -->
-        <section class="premium-hero" data-aos="fade-in">
-            <h1 class="premium-h1">My Projects</h1>
-            <p class="premium-p">A curated selection of the projects that define my journey. Explore each piece to see a live preview and experience the ideas behind the build.</p>
-            <p class="premium-p">This collection highlights both personal and academic work—each project reflecting growth in design, programming, and problem-solving. I update this space regularly with new experiments, concepts, and innovations.</p>
+    <main>
+        <!-- REFINED PROJECTS HERO -->
+        <section class="premium-hero" style="min-height: 60vh; padding-top: 100px;">
+            <div data-aos="fade-up">
+                <h1 class="premium-h1">Selected Work</h1>
+                <p class="subheading" style="max-width: 700px; margin: 0 auto;">A collection of platforms developed to solve real-world challenges in agriculture, healthcare, and education.</p>
+            </div>
         </section>
 
         <!-- CONTROLS -->
-        <section class="project-controls-container" data-aos="fade-up">
-            <div class="project-filters">
-                <button class="project-filter-btn active" data-filter="all">All</button>
-                <button class="project-filter-btn" data-filter="Web Application">Web App</button>
-                <button class="project-filter-btn" data-filter="E-commerce">E-commerce</button>
-                <button class="project-filter-btn" data-filter="IoT">IoT</button>
-            </div>
-            <div class="project-search">
-                <i class="ri-search-line"></i>
-                <input type="text" id="project-search-input" placeholder="Search all projects...">
+        <section class="project-controls-container" data-aos="fade-up" style="display: flex; justify-content: center; padding: 2rem 5%; gap: 1rem; flex-wrap: wrap;">
+            <div class="project-filters" style="display: flex; gap: 1rem;">
+                <button class="project-filter-btn active" data-filter="all">All Projects</button>
+                <button class="project-filter-btn" data-filter="Web Application">Systems</button>
             </div>
         </section>
 
-        <!-- FEATURED PROJECTS -->
-        <h2 class="premium-h1" style="font-size: 2.5rem; margin-bottom: 2rem;" data-aos="fade-up">Featured Projects</h2>
-        <section class="project-grid" data-aos="fade-up">
+        <section class="project-grid">
             <!-- Project Card 1: AI-Powered Cyberbullying Detection -->
             <div class="project-card" data-category="Web Application" data-title="AI-Powered Cyberbullying Detection" data-description="An AI-powered platform designed to detect and mitigate cyberbullying in online environments.">
                 <div class="project-card-image-container">
