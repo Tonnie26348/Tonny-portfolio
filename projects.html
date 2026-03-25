@@ -173,3 +173,24 @@
     <footer class="footer-fixed">
         <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS & JavaScript</p>
     </footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+          duration: 800,
+          once: true
+      });
+    </script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <script>
+      const lenis = new Lenis()
+      function raf(time) {
+        lenis.raf(time)
+        requestAnimationFrame(raf)
+      }
+      requestAnimationFrame(raf)
+    </script>
+    
+    <script src="script.js" type="module"></script>
+</body>
+</html>
