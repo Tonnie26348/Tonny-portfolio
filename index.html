@@ -6,7 +6,7 @@
     <title>Tonny Mutea - Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -20,13 +20,14 @@
         </nav>
         <button id="dark-mode-toggle">Dark Mode</button>
     </header>
+
     <main>
-        <!-- WORLD-CLASS HERO SECTION -->
+        <!-- WORLD-CLASS HERO SECTION WITH ORIGINAL CONTENT -->
         <section class="premium-hero">
-            <div data-aos="zoom-out" data-aos-duration="1200">
+            <div data-aos="zoom-out" data-aos-duration="1200" style="display: flex; flex-direction: column; align-items: center;">
                 <h1 class="premium-h1">Tonny Mutea</h1>
                 <p class="subheading">IT Specialist • Full-Stack Developer • Digital Architect</p>
-                <p class="premium-p" style="max-width: 600px; margin: 0 auto 2.5rem; opacity: 0.7;">
+                <p class="premium-p" style="max-width: 600px; margin: 0 auto 2.5rem; opacity: 0.7; font-size: 1.1rem;">
                     Building high-impact digital solutions that bridge the gap between complex problems and elegant technology. 
                     Based in Nairobi, focused on the future.
                 </p>
@@ -37,23 +38,25 @@
             </div>
         </section>
     </main>
+
     <footer class="footer-fixed">
         <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS & JavaScript</p>
     </footer>
     
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-      AOS.init();
+      AOS.init({
+          duration: 800,
+          once: true
+      });
     </script>
     <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
     <script>
       const lenis = new Lenis()
-
       function raf(time) {
         lenis.raf(time)
         requestAnimationFrame(raf)
       }
-
       requestAnimationFrame(raf)
     </script>
     <script src="script.js" type="module"></script>

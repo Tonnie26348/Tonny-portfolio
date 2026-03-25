@@ -6,8 +6,7 @@
     <title>About Me - Tonny Mutea</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    
-
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -21,6 +20,7 @@
         </nav>
         <button id="dark-mode-toggle">Dark Mode</button>
     </header>
+
     <main>
         <!-- REFINED ABOUT HERO -->
         <section class="premium-hero" style="min-height: 50vh; padding-top: 100px;">
@@ -32,21 +32,21 @@
 
         <section style="max-width: 800px; margin: 0 auto; padding: 0 5% 100px;">
             <div data-aos="fade-up">
-                <h2 style="margin-bottom: 1.5rem; font-size: 2rem;">Professional Profile</h2>
-                <p style="margin-bottom: 2rem; opacity: 0.8; font-size: 1.1rem;">
+                <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: var(--primary);">Professional Profile</h2>
+                <p style="margin-bottom: 2rem; opacity: 0.8; font-size: 1.1rem; line-height: 1.8;">
                     I am an Applied Computer Technology student at USIU-Africa, specializing in crafting robust digital systems. 
                     My approach combines technical proficiency in full-stack development with a deep understanding of user-centric design.
                 </p>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
                     <div>
-                        <h3 style="margin-bottom: 1rem; color: var(--primary);">Education</h3>
+                        <h3 style="margin-bottom: 1rem; color: var(--primary); font-size: 1.5rem;">Education</h3>
                         <p><strong>BSc. Applied Computer Technology</strong><br>USIU–Africa (Sophomore Year)</p>
                         <p style="margin-top: 0.5rem;"><strong>Diploma in Information Technology</strong><br>KCA University (2023–2025)</p>
                     </div>
                     <div>
-                        <h3 style="margin-bottom: 1rem; color: var(--primary);">Key Expertise</h3>
-                        <ul style="list-style: none;">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary); font-size: 1.5rem;">Key Expertise</h3>
+                        <ul style="list-style: none; opacity: 0.8; line-height: 1.8;">
                             <li>• Full-Stack Development</li>
                             <li>• Database Architecture</li>
                             <li>• System Design & Networking</li>
@@ -56,49 +56,50 @@
                 </div>
 
                 <div style="margin-top: 4rem;">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 2rem;">Skills & Competencies</h2>
+                    <h2 style="margin-bottom: 1.5rem; font-size: 2rem; color: var(--primary);">Skills & Competencies</h2>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
                         <div class="skill-group">
-                            <h4 style="margin-bottom: 0.5rem;">Development</h4>
+                            <h4 style="margin-bottom: 0.5rem; font-size: 1.2rem;">Development</h4>
                             <p style="font-size: 0.9rem; opacity: 0.7;">HTML, CSS, JS, Java, Python, C++</p>
                         </div>
                         <div class="skill-group">
-                            <h4 style="margin-bottom: 0.5rem;">IT & Infrastructure</h4>
+                            <h4 style="margin-bottom: 0.5rem; font-size: 1.2rem;">IT & Infrastructure</h4>
                             <p style="font-size: 0.9rem; opacity: 0.7;">Networking, Troubleshooting, System Design</p>
                         </div>
                         <div class="skill-group">
-                            <h4 style="margin-bottom: 0.5rem;">Tools</h4>
+                            <h4 style="margin-bottom: 0.5rem; font-size: 1.2rem;">Tools</h4>
                             <p style="font-size: 0.9rem; opacity: 0.7;">Git, VS Code, PostgreSQL, SQL Server</p>
                         </div>
                     </div>
                 </div>
 
                 <div style="margin-top: 4rem; text-align: center;">
-                    <a href="Tonny_Mutea_CV.pdf" target="_blank" class="btn-primary">Download Full Resume <i class="ri-download-line"></i></a>
+                    <a href="Tonny_Mutea_CV.pdf" target="_blank" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem;">Download Full Resume <i class="ri-download-line"></i></a>
                 </div>
             </div>
         </section>
     </main>
-    <footer>
+
+    <footer class="footer-fixed">
         <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS & JavaScript</p>
     </footer>
-    <script src="script.js" type="module"></script>
+
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-      AOS.init();
+      AOS.init({
+          duration: 800,
+          once: true
+      });
     </script>
     <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
     <script>
       const lenis = new Lenis()
-
       function raf(time) {
         lenis.raf(time)
         requestAnimationFrame(raf)
       }
-
       requestAnimationFrame(raf)
     </script>
-
     <script src="script.js" type="module"></script>
 </body>
 </html>
