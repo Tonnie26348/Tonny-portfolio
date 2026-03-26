@@ -86,7 +86,7 @@ nav a:hover, nav a.active {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0 10%;
+    padding: 100px 10% 60px; /* Added 100px top padding for header clearance */
     background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
 }
 
