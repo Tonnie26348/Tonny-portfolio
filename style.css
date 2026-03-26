@@ -220,6 +220,31 @@ body.dark-mode .project-card {
     margin-bottom: 1.5rem;
 }
 
+/* --- CONTACT INFO CARDS --- */
+.contact-info-card {
+    transition: var(--transition);
+}
+
+body.dark-mode .contact-info-card {
+    background: var(--card-bg-dark) !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+body.dark-mode .contact-info-card h3 {
+    color: var(--text-dark);
+}
+
+body.dark-mode .contact-info-card p,
+body.dark-mode .contact-info-card a {
+    color: var(--text-dark);
+    opacity: 0.8;
+}
+
+body.dark-mode .contact-info-card a:hover {
+    color: var(--accent);
+    opacity: 1;
+}
+
 /* --- FOOTER --- */
 footer {
     padding: 4rem 5%;
