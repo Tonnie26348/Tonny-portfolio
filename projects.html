@@ -21,54 +21,51 @@
         <button id="dark-mode-toggle">Dark Mode</button>
     </header>
 
-    <main class="premium-container">
-        <!-- HERO SECTION -->
-        <section class="premium-hero" data-aos="fade-in">
-            <h1 class="premium-h1">My Projects</h1>
-            <p class="premium-p">A curated selection of the projects that define my journey. Explore each piece to see a live preview and experience the ideas behind the build.</p>
-            <p class="premium-p">This collection highlights both personal and academic work—each project reflecting growth in design, programming, and problem-solving. I update this space regularly with new experiments, concepts, and innovations.</p>
+    <main>
+        <!-- REFINED PROJECTS HERO -->
+        <section class="premium-hero" style="min-height: 60vh; padding-top: 100px;">
+            <div data-aos="fade-up">
+                <h1 class="premium-h1">Selected Work</h1>
+                <p class="subheading" style="color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">A curated selection of my digital projects.</p>
+                <p style="max-width: 800px; margin: 0 auto; opacity: 0.8; font-size: 1.1rem; line-height: 1.8;">
+                    This collection highlights both personal and academic work—each project reflecting growth in design, programming, and problem-solving. I update this space regularly with new experiments, concepts, and innovations.
+                </p>
+            </div>
         </section>
 
         <!-- CONTROLS -->
-        <section class="project-controls-container" data-aos="fade-up">
-            <div class="project-filters">
-                <button class="project-filter-btn active" data-filter="all">All</button>
-                <button class="project-filter-btn" data-filter="Web Application">Web App</button>
-                <button class="project-filter-btn" data-filter="E-commerce">E-commerce</button>
-                <button class="project-filter-btn" data-filter="IoT">IoT</button>
-            </div>
-            <div class="project-search">
-                <i class="ri-search-line"></i>
-                <input type="text" id="project-search-input" placeholder="Search all projects...">
+        <section style="display: flex; justify-content: center; padding: 2rem 5%; gap: 1rem; flex-wrap: wrap;" data-aos="fade-up">
+            <div class="project-filters" style="display: flex; gap: 1rem; background: var(--card-bg-light); padding: 0.5rem 1.5rem; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow);">
+                <button class="project-filter-btn active" data-filter="all" style="background: none; border: none; font-weight: 600; cursor: pointer; color: var(--primary);">All</button>
+                <button class="project-filter-btn" data-filter="Web Application" style="background: none; border: none; font-weight: 600; cursor: pointer; opacity: 0.5;">Web App</button>
+                <button class="project-filter-btn" data-filter="E-commerce" style="background: none; border: none; font-weight: 600; cursor: pointer; opacity: 0.5;">E-commerce</button>
+                <button class="project-filter-btn" data-filter="IoT" style="background: none; border: none; font-weight: 600; cursor: pointer; opacity: 0.5;">IoT</button>
             </div>
         </section>
 
-        <!-- FEATURED PROJECTS -->
-        <h2 class="premium-h1" style="font-size: 2.5rem; margin-bottom: 2rem;" data-aos="fade-up">Featured Projects</h2>     
-        <section class="project-grid" data-aos="fade-up">
-            <!-- Project Card 1: AI-Powered Cyberbullying Detection -->
-            <div class="project-card" data-category="Web Application" data-title="AI-Powered Cyberbullying Detection" data-description="An AI-powered platform designed to detect and mitigate cyberbullying in online environments.">
+        <section class="project-grid">
+            <!-- Project Card 1 -->
+            <div class="project-card" data-category="Web Application" data-aos="fade-up">
                 <div class="project-card-image-container">
                     <img src="images/Screenshot 2026-03-25 203719.png" alt="AI-Powered Cyberbullying Detection">
                 </div>
                 <div class="project-card-content">
                     <div class="project-card-tags">
                         <span class="project-card-tag">AI</span>
-                        <span class="project-card-tag">Machine Learning</span>
+                        <span class="project-card-tag">ML</span>
                         <span class="project-card-tag">Python</span>
-                        <span class="project-card-tag">Natural Language Processing</span>
                     </div>
-                    <h3 class="project-card-title">AI-Powered Cyberbullying Detection</h3>
+                    <h3 class="project-card-title">AI Cyberbullying Detection</h3>
                     <p class="project-card-description">An AI-powered platform designed to detect and mitigate cyberbullying in online environments.</p>
                     <div class="project-card-buttons">
-                        <a href="https://whizz001.pythonanywhere.com/" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                        <a href="https://whizz001.pythonanywhere.com/" target="_blank" class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Live URL</a>
+                        <a href="#" class="btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; margin-left: 0.5rem;">Source</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Project Card 2: HouseAid Platform -->
-            <div class="project-card" data-category="Web Application" data-title="HouseAid Platform" data-description="Connects verified domestic workers with households through a secure, trust-based system.">
+            <!-- Project Card 2 -->
+            <div class="project-card" data-category="Web Application" data-aos="fade-up" data-aos-delay="100">
                 <div class="project-card-image-container">
                     <img src="images/Screenshot 2026-03-25 202043.png" alt="HouseAid Platform">
                 </div>
@@ -76,59 +73,56 @@
                     <div class="project-card-tags">
                         <span class="project-card-tag">React</span>
                         <span class="project-card-tag">Supabase</span>
-                        <span class="project-card-tag">Trust-based</span>
                     </div>
                     <h3 class="project-card-title">HouseAid Platform</h3>
                     <p class="project-card-description">Connects verified domestic workers with households through a secure, trust-based system.</p>
                     <div class="project-card-buttons">
-                        <a href="https://tonnie26348.github.io/HouseAid-Platform/" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                        <a href="https://tonnie26348.github.io/HouseAid-Platform/" target="_blank" class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Live URL</a>
+                        <a href="#" class="btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; margin-left: 0.5rem;">Source</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Project Card 3: AgriLink -->
-            <div class="project-card" data-category="Web Application" data-title="AgriLink" data-description="Links farmers directly to buyers, improving pricing transparency and eliminating middlemen.">
+            <!-- Project Card 3 -->
+            <div class="project-card" data-category="Web Application" data-aos="fade-up" data-aos-delay="200">
                 <div class="project-card-image-container">
                     <img src="images/Screenshot 2026-03-25 202003.png" alt="AgriLink">
                 </div>
                 <div class="project-card-content">
                     <div class="project-card-tags">
-                        <span class="project-card-tag">Agriculture</span>
                         <span class="project-card-tag">FinTech</span>
-                        <span class="project-card-tag">Direct Trade</span>
+                        <span class="project-card-tag">AgriTech</span>
                     </div>
                     <h3 class="project-card-title">AgriLink</h3>
                     <p class="project-card-description">Links farmers directly to buyers, improving pricing transparency and eliminating middlemen.</p>
                     <div class="project-card-buttons">
-                        <a href="https://tonnie26348.github.io/AgriLink/" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                        <a href="https://tonnie26348.github.io/AgriLink/" target="_blank" class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Live URL</a>
+                        <a href="#" class="btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; margin-left: 0.5rem;">Source</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Project Card 4: e-Afya -->
-            <div class="project-card" data-category="Web Application" data-title="e-Afya" data-description="A digital health system connecting hospitals, professionals, and public health services.">
+            <!-- Project Card 4 -->
+            <div class="project-card" data-category="Web Application" data-aos="fade-up" data-aos-delay="300">
                 <div class="project-card-image-container">
                     <img src="images/Screenshot 2026-03-25 202257.png" alt="e-Afya">
                 </div>
                 <div class="project-card-content">
                     <div class="project-card-tags">
                         <span class="project-card-tag">HealthTech</span>
-                        <span class="project-card-tag">Connectivity</span>
                         <span class="project-card-tag">Public Health</span>
                     </div>
                     <h3 class="project-card-title">e-Afya</h3>
                     <p class="project-card-description">A digital health system connecting hospitals, professionals, and public health services.</p>
                     <div class="project-card-buttons">
-                        <a href="https://tonnie26348.github.io/e-Afya/" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                        <a href="https://tonnie26348.github.io/e-Afya/" target="_blank" class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Live URL</a>
+                        <a href="#" class="btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; margin-left: 0.5rem;">Source</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Project Card 5: Student Clearance System -->
-            <div class="project-card" data-category="Web Application" data-title="Student Clearance System" data-description="Automates university clearance processes, reducing paperwork and improving efficiency.">
+            <!-- Project Card 5 -->
+            <div class="project-card" data-category="Web Application" data-aos="fade-up" data-aos-delay="400">
                 <div class="project-card-image-container">
                     <img src="images/Screenshot 2026-03-25 203857.png" alt="Student Clearance System">
                 </div>
@@ -136,27 +130,26 @@
                     <div class="project-card-tags">
                         <span class="project-card-tag">Automation</span>
                         <span class="project-card-tag">Education</span>
-                        <span class="project-card-tag">Efficiency</span>
                     </div>
-                    <h3 class="project-card-title">Student Clearance System</h3>
+                    <h3 class="project-card-title">Student Clearance</h3>
                     <p class="project-card-description">Automates university clearance processes, reducing paperwork and improving efficiency.</p>
                     <div class="project-card-buttons">
-                        <a href="https://student-clearance-system-echu.vercel.app/" target="_blank" class="btn-secondary">Live URL <i class="ri-external-link-line"></i></a>
-                        <a href="#" class="btn-primary">Source <i class="ri-arrow-right-up-line"></i></a>
+                        <a href="https://student-clearance-system-echu.vercel.app/" target="_blank" class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;">Live URL</a>
+                        <a href="#" class="btn-secondary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; margin-left: 0.5rem;">Source</a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer-fixed">
+    <footer>
         <p>© 2025 Tonny Mutea | Designed & Built with ❤️ using HTML, CSS & JavaScript</p>
     </footer>
 
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
       AOS.init({
-          duration: 800,
+          duration: 1000,
           once: true
       });
     </script>
